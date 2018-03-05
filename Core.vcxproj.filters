@@ -31,9 +31,6 @@
     <ClInclude Include="File.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HashMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Linkedlist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -59,9 +56,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="semaphore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="array.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

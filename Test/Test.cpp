@@ -34,9 +34,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	testFile();
 	testString();
 	testThreads();
-	testArray();
 	testCharBuf();
-	testHashMap();
 	testLinkedList();
 
 	//someMethod(1,2,3,4);
@@ -213,42 +211,6 @@ void testThreads() {
 
 	delete t1;
 	delete t2;
-}
-
-void testHashMap() {
-	printf("\n\nTesting HashMap\n==================\n");
-
-	HashMap<int, const char*> m1;
-	HashMap<const char*, int> m2;
-	
-	m1.put(3, "hello");
-	m1.put(7, "there");
-
-	m2.put("one", 1);
-	m2.put("two", 2);
-}
-
-void testArray() {
-	printf("\n\nTesting Array\n==================\n");
-	Array<int> a1;
-	assert(a1.size()==0);
-
-	a1.add(1);
-	assert(a1.size()==1);
-
-	a1.add(2);
-	assert(a1.size()==2);
-
-	assert(a1[0]==1);
-	assert(a1[1]==2);
-	assert(a1.get(0)==1);
-	assert(a1.get(1)==2);
-
-	assert(a1.remove(1)==2);
-	assert(a1.size()==1);
-
-	a1.clear();
-	assert(a1.size()==0);
 }
 
 void testCharBuf() {

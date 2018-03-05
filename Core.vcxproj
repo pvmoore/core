@@ -179,11 +179,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="array.h" />
     <ClInclude Include="CharBuf.h" />
     <ClInclude Include="core.h" />
     <ClInclude Include="File.h" />
-    <ClInclude Include="HashMap.h" />
     <ClInclude Include="Linkedlist.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="maths.h" />
