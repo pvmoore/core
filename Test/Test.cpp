@@ -17,28 +17,23 @@ int wmain(int argc, const wchar_t* argv[]) {
 	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF);
 	//_CrtSetAllocHook(MyAllocHook);
 #endif
-#ifdef NDEBUG 
-	static_assert(false, "Run these tests in DEBUG");
-#endif
-	printf("========================\n");
-	printf(" Testing core namespace\n");
-	printf("========================\n");
+#ifdef _DEBUG
+	printf("============== Running tests\n\n");
 
 	testString();
 	//testFile();
 	testThreads();
 	//testCharBuf();
 
-	//someMethod(1,2,3,4);
-
+#else
 	benchmark();
-
+#endif
 	printf("\nFinished. Press ENTER");
 	getchar();
 	return 0;
 }
 void testString() {
-	printf("==== Testing String ====\n");
+	printf("==== Testing string.h ====\n");
 
 	/// startsWith(string,string)
 	{
@@ -106,23 +101,8 @@ void testString() {
 		assert(String::toFloat("3.14")==3.14f);
 	}
 }
-int someMethod(int a, int b, int c, int d) {
-	printf("%d%d%d%d\n",a,b,c,d);
-	return a+b+c+d;
-}
 
-void assertEquals(const char* a, const char* b) {
-	if(a==b) return;
-	if(a==NULL || b==NULL) assert(0);
-	if(strlen(a) != strlen(b)) assert(0);
-	int i = 0;
-	while(a[i] && b[i]) {
-		if(a[i] != b[i]) assert(0);
-		i++;
-	}
-}	
-
-DWORD doSomething(void* args) {
+DWORD staticFunc(void* args) {
 	uint* p = (uint*)args;
 	uint arg = p[0];
 	printf("[%u] I am the new thread. Arg is %u...\n", 
@@ -131,14 +111,23 @@ DWORD doSomething(void* args) {
 	return 7;
 }
 void testThreads() {
-	printf("\n\nTesting threads.h\n==================\n");
+	printf("==== Testing thread.h ====\n");
 
 	printf("[Main] thread ID is %u\n", Thread::currentThreadId());
 	uint arg  = 1;
 	uint arg2 = 2;
 
-	Thread t1("One", doSomething, &arg);
-	Thread t2("Two", doSomething, &arg2);
+	const auto lambdaFunc = [](void* args)->DWORD {
+		uint* p = (uint*)args;
+		uint arg = p[0];
+		printf("[%u] I am the new thread. Arg is %u...\n",
+			   Thread::currentThreadId(), arg);
+		printf("[%u] Thread finishing\n", Thread::currentThreadId());
+		return 13;
+	};
+
+	Thread t1("One", lambdaFunc, &arg);
+	Thread t2("Two", staticFunc, &arg2);
 	t1.start();
 	t2.start();
 	printf("t1 id = %u, name='%s'\n", t1.id, t1.name.c_str());
@@ -159,6 +148,16 @@ void testThreads() {
 	printf("t1 cycles used = %zu\n", t1.getCyclesUsed());
 }
 
+void assertEquals(const char* a, const char* b) {
+	if(a == b) return;
+	if(a == NULL || b == NULL) assert(0);
+	if(strlen(a) != strlen(b)) assert(0);
+	int i = 0;
+	while(a[i] && b[i]) {
+		if(a[i] != b[i]) assert(0);
+		i++;
+	}
+}
 void testCharBuf() {
 	printf("\n\nTesting CharBuf\n==================\n");
 	CharBuf buf("hello");

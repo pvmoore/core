@@ -38,6 +38,7 @@ static_assert(_WIN64 == 1, "Expecting to be in 64-bit mode");
 /// std namespace files
 #define _ALLOW_RTCc_IN_STL
 #include <memory>
+#include <vector>
 #include <chrono>
 
 #include "../core.h"

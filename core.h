@@ -40,6 +40,6 @@ namespace core {
 #include "file.h"
 #include "mutex.h"
 #include "semaphore.h"
-#include "threads.h"
+#include "thread.h"
 #include "map.h"
 #include "queue.h"

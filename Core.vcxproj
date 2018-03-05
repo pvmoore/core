@@ -189,7 +189,7 @@
     <ClInclude Include="semaphore.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="string.h" />
-    <ClInclude Include="threads.h" />
+    <ClInclude Include="thread.h" />
     <ClInclude Include="wstring.h" />
   </ItemGroup>
   <ItemGroup>

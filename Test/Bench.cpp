@@ -1,17 +1,26 @@
 #include "stdafx.h"
 
+#include <vector>
+#include <chrono>
+
 using namespace core;
+using std::vector;
+using std::chrono::high_resolution_clock;
 
 #pragma intrinsic(__rdtsc)
-void benchStringIndexOf();
+
 void benchMemset();
 void benchCore();
+void benchCharBuf();
 
 void benchmark() {
 #ifdef _DEBUG
+	printf("============== Not running benchmarks in DEBUG mode\n\n");
 	return;
 #endif
-	printf("\nPerforming benchmarks==============\n\n");	
+	printf("============== Running benchmarks\n\n");	
+
+	benchCharBuf();
 	//benchMemset();
 	//benchCore();
 }
@@ -41,4 +50,12 @@ void benchCore() {
 	}
 	ulong end = __rdtsc();
 	printf("Core took %d ticks\n", (int)(end-start));
+}
+
+void benchCharBuf() {
+	auto start = high_resolution_clock::now();
+
+	auto end = high_resolution_clock::now();
+	auto elapsedMs = (end-start).count() * 1e-6;
+	printf("Elapsed: %.3f ms\n", elapsedMs);
 }
