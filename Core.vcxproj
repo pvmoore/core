@@ -187,7 +187,6 @@
     <ClInclude Include="mutex.h" />
     <ClInclude Include="semaphore.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Stream.h" />
     <ClInclude Include="string.h" />
     <ClInclude Include="threads.h" />
     <ClInclude Include="wstring.h" />
