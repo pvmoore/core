@@ -6,10 +6,9 @@
 
 namespace core {
 
-/// TODO - handle non-ascii data
 class CharBuf {
-	const static uint GROWTH = 8;
-	char* buf;
+	static constexpr uint GROWTH = 8;
+	char* buf = nullptr;
 	uint strLength;
 	uint bufLength;
 
@@ -21,9 +20,9 @@ class CharBuf {
 		}
 	}
 public:
-	CharBuf()							  : buf(nullptr), strLength(0), bufLength(0) {}
-	CharBuf(const char* str, uint len=-1) : buf(nullptr), strLength(0), bufLength(0) { append(str, len); }
-	CharBuf(CharBuf& src)				  : buf(nullptr), strLength(0), bufLength(0) { append(src.cStr(), src.length()); }
+	CharBuf()							  : strLength(0), bufLength(0) {}
+	CharBuf(const char* str, uint len=-1) : strLength(0), bufLength(0) { append(str, len); }
+	CharBuf(CharBuf& src)				  : strLength(0), bufLength(0) { append(src.cStr(), src.length()); }
 
 	~CharBuf() { if(buf) free(buf); buf = nullptr; strLength = bufLength = 0; }
 	
@@ -73,43 +72,42 @@ public:
 		return *this;
 	}
 	CharBuf& append(int i) {
-		static char temp[20];
-		int len = sprintf(temp, "%i", i);
+		char temp[20];
+		int len = sprintf_s(temp, "%i", i);
 		return append(temp, len);
 	}
 	CharBuf& append(uint i) {
-		static char temp[20];
-		int len = sprintf(temp, "%u", i);
+		char temp[20];
+		int len = sprintf_s(temp, "%u", i);
 		return append(temp, len);
 	}
 	CharBuf& append(slong i) {
-		if(i > MAX_SINT) assert(0 && "unsupported");
+		assert(i<=MAX_SINT && "unsupported");
 		return append((int)i);
 	}
 	CharBuf& append(ulong i) {
-		if(i > 0xffffffff) assert(0 && "unsupported");
+		assert(i <= MAX_UINT && "unsupported");
 		return append((uint)i);
 	}
 	CharBuf& append(double d, uint dp=-1) {
-		static char temp[30];
+		char temp[30];
 		int len;
 		if(dp==-1) {
-			len = sprintf(temp, "%f", d);
+			len = sprintf_s(temp, "%f", d);
 		} else {
-			len = sprintf(temp, "%.*f", dp, d);
+			len = sprintf_s(temp, "%.*f", dp, d);
 		}
 		return append(temp, len);
 	}
+	/// todo - handle case where text>1024 chars
 	CharBuf& appendFmt(const char* fmt, ...) {
-		static const int MAX_CHARS = 1024;
-		static char text[MAX_CHARS];							
+		char text[1024];							
 		va_list	ap;									
 		va_start(ap, fmt);														
-		int len = vsprintf_s(text, MAX_CHARS, fmt, ap);
+		int len = vsprintf_s(text, fmt, ap);
 		va_end(ap);	
 		return append(text, len);
 	}
-
 	bool contains(CharBuf& str) const {
 		return indexOf(str) != -1;
 	}

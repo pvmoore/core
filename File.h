@@ -17,11 +17,10 @@ class File {
 		if(mode==desiredMode && strcmp(flags, desiredFlags) == 0) return true;
 		if(fp) close();
 
-		fp = fopen(path, desiredFlags);
-		if(fp) {
+		if(0 == fopen_s(&fp, path, desiredFlags)) {
 			mode = desiredMode;
 			return true;
-		} 
+		}
 		mode = NONE;
 		return false;
 	}
@@ -47,18 +46,22 @@ public:
 		flags = nullptr;
 	}
 	ulong length() const {
-		FILE* f = fopen(path, "r");
-		if(f==nullptr) return 0;
-		fseek(f, 0, SEEK_END);
-		int len = ftell(f);
-		fclose(f);
+		ulong len = 0;
+		FILE* f;
+		if(0 == fopen_s(&f, path, "r")) {
+			fseek(f, 0, SEEK_END);
+			len = ftell(f);
+			fclose(f);
+		}
 		return len;
 	}
 	bool exists() const {
-		FILE* f = fopen(path, "r");
-		if(f==nullptr) return false;
-		fclose(f);
-		return true;
+		FILE* f = nullptr;
+		if(0 == fopen_s(&f, path, "r")) {
+			fclose(f);
+			return true;
+		}
+		return false;
 	}
 	bool deleteFile() const {
 		return remove(path)!=-1; 
@@ -115,7 +118,7 @@ public:
 	}
 	uint write(int i) {
 		char buf[32];
-		sprintf(buf, "%d", i);
+		sprintf_s(buf, "%d", i);
 		return write(buf);
 	}
 };

@@ -157,13 +157,13 @@ public:
 	explicit String(float d) : reference(NULL), offset(0) {
 		printf("{float constructor}\n");
 		char temp[32];
-		sprintf(temp,"%g",d);
+		sprintf_s(temp,"%g",d);
 		_init(temp, (uint)strlen(temp));
 	}
 	explicit String(double d) : reference(nullptr), offset(0) {
 		printf("{double constructor}\n");
 		char temp[32];
-		sprintf(temp,"%g",d);
+		sprintf_s(temp,"%g",d);
 		_init(temp, (uint)strlen(temp));
 	}
 	String(const char* const str, uint start=0, uint end=MAX_UINT) : reference(nullptr), offset(0) {

@@ -7,22 +7,23 @@
 namespace core {
 
 class Log {
-	const char* fn;
+	const char* fn = nullptr;
 	FILE* fp;
 public:
-	Log(const char* filename) : fn(filename), fp(NULL) {}
-	~Log() { if(fp) fclose(fp); }
+	Log(const char* filename) : fn(filename) {}
+	~Log() { if(fp) fclose(fp); fp = nullptr; }
 
 	void write(const char* fmt, ...) {
-		static const int MAX_CHARS = 256;
-		static char text[MAX_CHARS];							
+		if(!fp) {
+			if(0 != fopen_s(&fp, fn, "w")) return;
+		}
+
+		char text[256];							
 		va_list	ap;									
 
 		va_start(ap, fmt);														
-		vsprintf_s(text, MAX_CHARS, fmt, ap);
+		vsprintf_s(text, fmt, ap);
 		va_end(ap);		
-
-		if(!fp) fp = fopen(fn, "w");
 
 		fwrite(text, 1, strlen(text), fp);
 		fwrite("\r\n", 1, 2, fp);
