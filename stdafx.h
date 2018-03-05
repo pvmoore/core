@@ -25,15 +25,10 @@ static_assert(_WIN64==1, "Expecting to be in 64-bit mode");
 #define WIN32_LEAN_AND_MEAN 
 #include <windows.h>
 
-#include <process.h>
-//#include <new.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <time.h>
-#include <string.h>
+//#include <stdio.h>
+//#include <stdlib.h>
 #include <assert.h>
+#include <intrin.h>
 
 /// std namespace files
 #define _ALLOW_RTCc_IN_STL
@@ -41,5 +36,6 @@ static_assert(_WIN64==1, "Expecting to be in 64-bit mode");
 #include <atomic>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include "core.h"
