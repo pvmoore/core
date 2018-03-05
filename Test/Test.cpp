@@ -7,15 +7,13 @@ using std::vector;
 void testFile();
 void testThreads();
 void testCharBuf();
-int someMethod(int a, int b, int c, int d);
-
 void testString();
+
 void benchmark();
 
 int wmain(int argc, const wchar_t* argv[]) {
 #ifdef _DEBUG
 	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF);
-	//_CrtSetAllocHook(MyAllocHook);
 #endif
 #ifdef _DEBUG
 	printf("============== Running tests\n\n");
