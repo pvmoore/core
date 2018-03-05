@@ -36,8 +36,9 @@ void benchMemset() {
 
 void benchCore() {
 	ulong start=__rdtsc();
-	//printf("%d\n", core_div_10(123));
-	volatile int a = core_div_10(100);
+	{
+
+	}
 	ulong end = __rdtsc();
 	printf("Core took %d ticks\n", (int)(end-start));
 }

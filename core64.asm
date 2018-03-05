@@ -18,8 +18,7 @@
 ; NOTES:
 ; 	1) always use ret 0 instead of ret
 
-; compile with "\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\amd64\ml64.exe" /c core64.asm
-; or run build_asm.bat
+; compile with ml64.exe /nologo /WX /c core64.asm
 
 extrn malloc:proc
 extrn free:proc
@@ -28,11 +27,10 @@ _TEXT	SEGMENT
 
 ; void core_memset(char* const dest, ubyte value, uint length)
 ; void core_memcpy(char* const dest, const char* const src, uint length)
-; uint core_div_10(uint value)
 ; int core_indexof(const char* const haystack, const char* const needle, uint haystackLength, uint needleLength)
 
+;------------------------------------------------------------------------------------------
 
-;-----------------------------------------------------------------------------------------------------------------------
 ; void core_memset(char* const dest, ubyte value, uint length)
 core_memset proc
 @destptr	equ rcx
@@ -99,10 +97,8 @@ core_memset proc
 	ret 0
 core_memset endp
 
+;------------------------------------------------------------------------------------------
 
-
-
-;-----------------------------------------------------------------------------------------------------------------------
 ; void core_memcpy(char* const dest, const char* const src, uint length)
 core_memcpy proc
 @destptr	equ rcx
@@ -162,23 +158,7 @@ core_memcpy proc
 	ret 0
 core_memcpy endp
 
-
-
-
-;-----------------------------------------------------------------------------------------------------------------------
-; uint core_div_10(uint value)
-core_div_10 proc
-	;ecx = value
-	
-	mov	eax, -858993459				
-	mul	ecx
-	shr	edx, 3
-	mov eax, edx
-	ret 0
-core_div_10 endp	
-
-
-
+;------------------------------------------------------------------------------------------
 
 ; int core_indexof(const char* const haystack, const char* const needle, uint haystackLength, uint needleLength)
 ; (Assumes all arguments are valid and have been sanitised)
@@ -218,16 +198,15 @@ core_indexof proc
 	ret 0
 core_indexof endp
 
+;------------------------------------------------------------------------------------------
 
 _TEXT	ENDS
-
 
 
 CONST	SEGMENT
 dd_false	dd 0
 dd_true		dd 1			
 CONST	ENDS
-
 
 
 DATA 	segment

@@ -20,14 +20,13 @@ namespace core {
 	const ulong MAX_ULONG	= 0xffffffffffffffff;
 	const ulong MIN_ULONG	= 0x0000000000000000;
 
+	/// 
 	extern "C" {
 		//uint core_parse_uint(char*, uint);
-		//uint core_div_10(uint);
 		//void core_div_mod_10(uint*, uint*, uint);
 		//bool core_strcmp(const char* str1, const char* str2, uint strlen);
 		//void core_memcpy(char* const dest, const char* const src, uint length);
 
-		uint core_div_10(uint value);
 		void core_memcpy(char* const dest, const char* const src, uint length);
 		void core_memset(char* const dest, ubyte value, uint length);
 		int core_indexof(const char* const haystack, const char* const needle, uint haystackLength, uint needleLength);
