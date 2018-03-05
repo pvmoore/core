@@ -37,10 +37,9 @@ namespace core {
 }
 
 #include "log.h"
-#include "maths.h" 
+#include "math.h" 
 #include "String.h"
 #include "CharBuf.h"
-#include "LinkedList.h"
 #include "File.h"
 #include "Stream.h"
 #include "mutex.h"
