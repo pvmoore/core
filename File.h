@@ -1,8 +1,6 @@
 #pragma once
 
-#include <stdio.h>
-#include <string.h>
-#include <windows.h>
+#include <string>
 
 namespace core {
 
@@ -72,7 +70,7 @@ public:
 	bool isDirectory() const {
 		const uint dwAttr = GetFileAttributesA(path);
 		if(dwAttr !=  INVALID_FILE_ATTRIBUTES) {
-			String p = path;
+			std::string p = path;
 			if((dwAttr & FILE_ATTRIBUTE_DIRECTORY & dwAttr) && p!="." && p!="..") {
 				return true;
 			}

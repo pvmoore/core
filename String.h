@@ -1,420 +1,119 @@
 #pragma once
 
+#include <string>
+#include <vector>
+
 namespace core {
 
-class String;
-typedef std::shared_ptr<String> StringRef;
-
-/// 
-/// immutable String implementation
-///
 class String {
-	char* chararray;
-	uint chararrayLength;
-	uint offset;
-	uint count;
-
-	// reference counting
-	struct ChararrayReference {
-		uint chararrayReferences;
-		ChararrayReference() : chararrayReferences(2) {}
-	} *reference;
-	
-	/// findme guaranteed to be non-NULL
-	int _indexOf(const char* const findme, uint cLen, uint start, uint end) const {
-		if(start>=count || start>=end) return -1;
-		if(cLen==0 || cLen>count-start) return -1;
-		if(end>count) end = count;
-
-		//return core_indexof(chararray+offset, findme, count, cLen);
-
-		start += offset;
-		end += offset;
-		end -= (cLen-1);
-
-		uint cPos = 0;
-		for(uint i=start; i<end; i++) {
-			char cc = chararray[i];
-			if(cc==findme[cPos]) {
-				if(++cPos==cLen) return i-cLen+1;
-			} else {
-				cPos = 0;
-			}
-		}
-		return -1;
-	}
-	/// findme guaranteed to be non-NULL
-	int _lastIndexOf(const char* const findme, uint cLen, uint start, uint end) const {
-		if(start>=count || start>=end) return -1;
-		if(cLen==0 || cLen>count-start) return -1;
-		if(end>count) end = count;
-		start += offset;
-		end += offset;
-
-		for(int i=end-cLen; i>=(int)start; i--) {
-			const char* const p = chararray+i;
-			uint cPos = 0;
-			for(uint n=0; n<cLen; n++) {
-				if(p[n]==findme[n]) {
-					if(++cPos==cLen) return i;
-				} else cPos = 0;
-			}
-		}
-		return -1;
-	}
-	uint _parseUint(char* const buf, uint n) const {
-		uint pos = 15;
-		do{
-			uint rem = (uint)(n%10);
-			n /= 10;
-			buf[--pos] = '0'+rem;
-		}while(n>0);
-		return pos;
-	}
-	uint _parseUlong(char* const buf, ulong n) const {
-		uint pos = 30;
-		do{
-			uint rem = (uint)(n%10);
-			n /= 10;
-			buf[--pos] = '0'+rem;
-		}while(n>0);
-		return pos;
-	}
-	void _init(const char* const chars, uint length) {
-		if(length==0) {
-			this->chararrayLength	= 0;
-			this->chararray			= new char[1];
-		} else {
-			this->chararrayLength = length;
-			this->chararray = new char[length+1];
-			memcpy(this->chararray, chars, length);
-		}
-		this->count = length;
-		this->chararray[length] = 0;
-	}
-	void _delete() {
-		if(!reference || --(reference->chararrayReferences)==0) {
-			delete[] chararray;
-			delete reference;
-		} 
-		reference = nullptr;
-		chararray = nullptr;
-	}
 public:
-	////////////////////////////////////////////////////////////////////////////////////////////////////// constructors
-	String() : chararray(nullptr), chararrayLength(0), offset(0), count(0), reference(nullptr) {
-		printf("{default constructor}\n");
-		_init(nullptr, 0);
+	inline static bool startsWith(const std::string& s, const std::string& needle) {
+		return !needle.empty() && s.size() >= needle.size() &&
+			0 == strncmp(s.data(), needle.data(), needle.size());
 	}
-	explicit String(bool b) : reference(nullptr), offset(0) {
-		printf("{bool constructor}\n");
-		if(b) {	
-			_init("true", 4);
-		} else {
-			_init("false", 5);
+	inline static bool endsWith(const std::string& s, const std::string& needle) {
+		return !needle.empty() && s.size() >= needle.size() &&
+			0 == strncmp(&s[s.size() - needle.size()], needle.data(), needle.size());
+	}
+	inline static bool contains(const std::string& s, const std::string& needle) {
+		return !needle.empty() && s.size() >= needle.size() &&
+			s.find(needle) != std::string::npos;
+	}
+	/// Removes whitespace from end of string (Copy-on-write)
+	static std::string trimRight(const std::string& s) {
+		if(s.empty()) return s;
+		slong e = s.size() - 1;
+		while(e >= 0 && s[e]<33) { e--; }
+		if(e<0) return "";
+		return e == s.size() - 1 ? s : std::string(s.begin(), s.begin() + e + 1);
+	}
+	/// Removes whitespace from start of string (Copy-on-write)
+	static std::string trimLeft(const std::string& s) {
+		if(s.empty()) return s;
+		int e = 0;
+		while(e<s.size() && s[e]<33) { e++; }
+		if(e == 0) return s;
+		return e == s.size() - 1 ? s : std::string(s.begin() + e, s.end());
+	}
+	/// Removes whitespace from both sides of string (Copy-on-write)
+	static std::string trimBoth(const std::string& s) {
+		if(s.empty()) return s;
+		if(s[0]<33) {
+			auto s2 = trimLeft(s);
+			return trimRight(s2);
 		}
+		if(s[s.size() - 1]<33) return trimRight(s);
+		return s;
 	}
-	explicit String(char c) : reference(nullptr), offset(0) {
-		printf("{char constructor}\n");
-		_init(&c, 1);
-	}
-	explicit String(sint n) : reference(nullptr), offset(0) {
-		printf("{sint constructor}\n");
-		bool neg = false;
-		if(n<0) {
-			neg = true;
-			n = -n;
-		}
-		char temp[15];
-		uint pos = _parseUint(temp, n);
-		if(neg) temp[--pos] = '-';
-		_init(temp+pos, 15-pos);
-	}
-	explicit String(uint n) : reference(nullptr), offset(0) {
-		printf("{uint constructor}\n");
-		char temp[15];
-		uint pos = _parseUint(temp, n);
-		_init(temp+pos, 15-pos);
-	}
-	explicit String(slong n) : reference(nullptr), offset(0) {
-		printf("{slong constructor}\n");
-		bool neg = false;
-		if(n<0) {
-			neg = true;
-			n = -n;
-		}
-		char temp[30];
-		uint pos = _parseUlong(temp, n);
-		if(neg) temp[--pos] = '-';
-		_init(temp+pos, 30-pos);
-	}
-	explicit String(ulong n) : reference(nullptr), offset(0) {
-		printf("{ulong constructor}\n");
-		char temp[30];
-		uint pos = _parseUlong(temp, n);
-		_init(temp+pos, 30-pos);
-	}
-	explicit String(float d) : reference(NULL), offset(0) {
-		printf("{float constructor}\n");
-		char temp[32];
-		sprintf_s(temp,"%g",d);
-		_init(temp, (uint)strlen(temp));
-	}
-	explicit String(double d) : reference(nullptr), offset(0) {
-		printf("{double constructor}\n");
-		char temp[32];
-		sprintf_s(temp,"%g",d);
-		_init(temp, (uint)strlen(temp));
-	}
-	String(const char* const str, uint start=0, uint end=MAX_UINT) : reference(nullptr), offset(0) {
-		uint len = (uint)strlen(str);
-		if(end>len) end = len;
-		printf("{char* constructor '%s' chars %u to %u}\n", str, start, end);
+	/// Splits a string using whitespace as separator.
+	static std::vector<std::string> split(const std::string& s) {
+		std::vector<std::string> array;
+		if(s.empty()) return array;
+		int pos = 0;
+		int start = -1;
+		while(pos<s.size()) {
+			start = -1;
+			/// skip separator
+			while(pos < s.size() && s[pos] < 33) pos++;
+			if(pos == s.size()) break;
 
-		if(start>=end) {
-			_init(nullptr, 0);
-			return;
-		}
-		_init(str+start, end-start);
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////// copy constructors
-	String(String& str, uint start=0, uint end=MAX_UINT) {
-		if(end>str.count) end = str.count;
-		printf("{copy String& - reusing existing chararray '%s' chars %u to %u}\n", str.chararray, start, end);
-		
-		if(start>=end) {
-			_init(nullptr, 0);
-			return;
-		}
+			/// start collecting the next token here
+			start = pos;
 
-		this->reference = str.reference;
-		if(!this->reference) {
-			this->reference = new ChararrayReference();
-			str.reference = this->reference;
-		} else {
-			this->reference->chararrayReferences++;
-		}
-		this->offset			= str.offset + start;
-		this->count				= end-start;
-		this->chararrayLength	= str.chararrayLength;
-		this->chararray			= str.chararray;
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////// move constructor
-	String(String&& str) :
-		chararray(str.chararray),
-		chararrayLength(str.chararrayLength),
-		offset(str.offset),
-		count(str.count) 
-	{
-		printf("{copy String&&}\n");
-		str.chararray = nullptr;
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////// destructor
-	~String() {
-		_delete();
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////// public methods
-	const char* const cStr() {
-		if(offset==0 && count==chararrayLength) {
-			// just return chararray
-			return const_cast<const char* const>(chararray);
-		}
+			while(pos<s.size() && s[pos]>32) pos++;
+			if(pos == s.size()) break;
 
-		// hm. Is this right?
-		if(reference && reference->chararrayReferences==1) {
-			// we don't need this reference any more
-			delete reference;
-			reference = nullptr;
+			array.push_back(std::string(s.begin() + start, s.begin() + pos));
 		}
-		
-		if(!reference) {
-			// no-one else is looking at our chararray - we can just modify it in place
-			// PS. This is rubbish
-			chararray[offset+count] = 0;
-			return const_cast<const char* const>(chararray+offset);
+		if(start>-1 && pos>start) array.push_back(std::string(s.begin() + start, s.begin() + pos));
+		return array;
+	}
+	/// splits a string using sep as separator.
+	static std::vector<std::string> split(const std::string& s, char sep) {
+		std::vector<std::string> array;
+		if(s.empty()) return array;
+		int pos = 0;
+		int start = 0;
+		while(pos<s.size()) {
+			start = pos;
+			while(pos<s.size() && s[pos] != sep) pos++;
+
+			//if(pos > start) {
+			array.push_back(std::string(s.begin() + start, s.begin() + pos));
+			//}
+			pos++;
 		}
-		// make a copy 
-		char* copy = new char[count+1];
-		//pvmoore core_memcpy(copy, chararray+offset, count);
-		copy[count] = 0;
-		
-		// we are no longer referencing the old chararray
-		_delete();
-		chararray = copy;
-		chararrayLength = count;
-		offset = 0;
-		return const_cast<const char* const>(chararray);
-	}
-	uint length() const { 
-		return count; 
-	}
-	int indexOf(const String& findme, uint start=0, uint end=MAX_UINT) const {
-		if(findme.count==0) return -1;
-		return _indexOf(findme.chararray+findme.offset, findme.count, start, end);
-	}
-	int indexOf(const char* const findme, uint start=0, uint end=MAX_UINT) const {
-		if(findme==nullptr) return -1;
-		return _indexOf(findme, (uint)strlen(findme), start, end);
-	}
-	int lastIndexOf(const String& findme, uint start=0, uint end=MAX_UINT) const {
-		if(findme.count==0) return -1;
-		return _lastIndexOf(findme.chararray+findme.offset, findme.count, start, end);
-	}
-	int lastIndexOf(const char* const findme, uint start=0, uint end=MAX_UINT) const {
-		if(findme==nullptr) return -1;
-		return _lastIndexOf(findme, (uint)strlen(findme), start, end); 
-	}
-	bool contains(const String& text, uint start=0, uint end=MAX_UINT) const {
-		return indexOf(text, start, end)!=-1;
-	}
-	bool contains(const char* text, uint start=0, uint end=MAX_UINT) const {
-		return indexOf(text, start, end)!=-1;
-	}
-	StringRef lowerCased()  {
-		StringRef copy = std::make_shared<String>(*this);
-		//StringRef copy(new String(this));
-		
-		/// TODO - this is ascii only and it's rubbish
-		for(uint i=copy->offset; i<copy->count; i++) {
-			if(copy->chararray[i] >= 'A' && copy->chararray[i] <= 'Z') copy->chararray[i] += 32;	
+		if(pos > 0 && s[pos - 1] == sep) {
+			/// There is a separator at the end of the string
+			array.push_back("");
 		}
-
-		return copy;
+		return array;
 	}
-	// does this work? who cleans up the returned String? or is it a copy?
-	String substring(uint start, uint end=MAX_UINT) {
-		if(end>chararrayLength) end = chararrayLength;
-		if(start>=end) start = end = 0;
-		//return String( *(const_cast<String*>(this)), start, end);
-		return String(*this, start, end);
-	}
-	//String replace(const char* const replaceme, const char* const withme, uint start=0, uint end=MAX_UINT) const {
-		// FIXME
-		/*size_t wlen = strlen(withme);
-		  size_t rlen = strlen(replaceme);
-		  //
-		  if(start<0) start=0;
-		  if(end>len) end = len;
-		  char* temp = new char[len+1];
-		  while(true) {
-			char* i = strstr(chararray,replaceme);
-			if(i!=NULL) {
-      
-			}
-		  }
-		  //return Kestrel::HEAP.Alloc(new String(*this),false,"");
-		  */
-		//return *this;
-	//}
-	//////////////////////////////////////////////////////////////////////////////////// operators
-	//operator const char*() {
-	//	printf("cast to char*\n");
-		// this could cause a problem if the chararray is deleted
-	//	return cStr();
-	//}
-	bool operator==(String& rhs) const {
-		printf("{%s(%u)==%s(%u)}\n", chararray, count, rhs.chararray+rhs.offset, rhs.count);
-		if(this==&rhs) return true;
-		if(count!=rhs.count) return false; 
-		return memcmp(chararray+offset, rhs.chararray+rhs.offset, count)==0;
-	}
-	bool operator==(const char* const rhs) const {
-		printf("{%s(%u)==%s(%u)}\n", chararray, count, rhs, (int)strlen(rhs));
-		uint length = (uint)strlen(rhs);
-		if(count!=length) return false;
-		return memcmp(chararray+offset, rhs, count)==0;
-	}
-	bool operator!=(String& rhs) const {
-		return !operator==(rhs);
-	}
-	bool operator!=(const char* const rhs) const {
-		return !operator==(rhs);
-	}
-	/// copy assignment --> this = rhs
-	String& operator=(String& rhs) { 	
-		if(this != &rhs) {
-			printf("assign - reusing chararray '%s'\n", rhs.chararray);
-			// delete our chararray if we have the only reference
-			_delete();
-
-			// point to rvalue chararray
-			this->reference = rhs.reference;
-			if(!this->reference) {
-				this->reference = new ChararrayReference();
-				rhs.reference = this->reference;
-			} else {
-				this->reference->chararrayReferences++;
-			}
-			this->chararrayLength	= rhs.chararrayLength;
-			this->chararray			= rhs.chararray;
-			this->offset			= rhs.offset;
-			this->count				= rhs.count;
+	/// Concatenate strings into a single comma separated string
+	static std::string toString(const std::vector<std::string>& array, std::string delim = ", ") {
+		std::string s;
+		for(int i = 0; i<array.size(); i++) {
+			if(i>0) s += delim;
+			s += array[i];
 		}
-		return *this;
+		return s;
 	}
-	/// copy assignment to temporary -> this = temp
-	String& operator=(String&& temp) {
-		printf("assign to temporary\n");
-		// delete our chararray if we have the only reference
-		_delete();
-
-		// point to rvalue chararray
-		this->reference = new ChararrayReference();
-		temp.reference = this->reference;
-
-		this->chararrayLength	= temp.chararrayLength;
-		this->chararray			= temp.chararray;
-		this->offset			= temp.offset;
-		this->count				= temp.count;
-		return *this;
+	inline static std::string toString(int i) {
+		char buf[64];
+		_itoa_s(i, buf, 10);
+		return std::string(buf);
 	}
-	/*
-	String& operator=(const char* const rvalue) { 
-		// copy assignment --> this = rvalue 
-		delete[] chararray;
-		len = (uint)strlen(rvalue);
-		chararray = new char[len+1];
-		strcpy(chararray, rvalue);
-		return *this;
-	}*/
-	char operator[](int i) const {
-		return (chararray+offset)[i];
+	inline static std::string toString(slong value) {
+		char buf[64];
+		_i64toa_s(value, buf, 64, 10);
+		return std::string(buf);
 	}
-	/*
-	void* operator new(size_t bytes) {
-		printf("new String\n",bytes);
-
-		//return ::operator new(bytes);
+	inline static int toInt(const std::string& s) {
+		return atoi(s.c_str());
 	}
-	void operator delete(void* p) {
-		printf("delete String\n",(int)p);
-		::operator delete(p);
+	inline static float toFloat(const std::string& s) {
+		return (float)atof(s.c_str());
 	}
-	*/
-	/*
-	void* operator new[](size_t bytes) {
-		printf("new[] %u bytes\n",bytes);
-		return ::operator new[](bytes);
-	}
-	void operator delete[](void* p) {
-		printf("delete[] %u\n",(int)p);
-		::operator delete[](p);
-	}
-	*/
-	//////////////////////////////////////////////////////////////////////////////////////// friends
-/*
-	friend String operator+(char, String&);
-	friend String operator+(String&, char);
-	friend String operator+(String&, String&);  
-	friend String operator+(bool, String&);    
-	friend String operator+(String&, bool);
-	friend String operator+(double, String&);
-	friend String operator+(String&, double);  
-	friend String operator+(char*, String&);
-	friend String operator+(String&, char*);
-	friend String operator+(long, String&);
-	friend String operator+(String&, long);    
-*/
 };
 
-} // namespace core
+} /// core

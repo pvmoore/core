@@ -40,9 +40,6 @@
     <ClInclude Include="threads.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="String.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Stream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -53,6 +50,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="wstring.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

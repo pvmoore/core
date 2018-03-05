@@ -1,40 +1,33 @@
 #include "stdafx.h"
 
 using namespace core;
+using std::string;
+using std::vector;
 
 void testFile();
 void testThreads();
-void testArray();
 void testCharBuf();
-void testHashMap();
-void testLinkedList();
 int someMethod(int a, int b, int c, int d);
 
 void testString();
 void benchmark();
 
-#pragma intrinsic(__rdtsc)
-
-int _tmain(int argc, _TCHAR* argv[]) {
+int wmain(int argc, const wchar_t* argv[]) {
 #ifdef _DEBUG
 	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF);
 	//_CrtSetAllocHook(MyAllocHook);
-	printf("Test running in DEBUG mode\n");
 #endif
 #ifdef NDEBUG 
-	printf("Test running in RELEASE mode\n");
+	static_assert(false, "Run these tests in DEBUG");
 #endif
+	printf("========================\n");
+	printf(" Testing core namespace\n");
+	printf("========================\n");
 
-	printf("Testing core namespace\n");
-
-	printf("size_t=%zu\n", sizeof(size_t));
-	printf("ptrdiff_t=%zu\n", sizeof(ptrdiff_t));
-	printf("DWORD=%zu\n", sizeof(DWORD));
-
-	testFile();
 	testString();
-	testThreads();
-	testCharBuf();
+	//testFile();
+	//testThreads();
+	//testCharBuf();
 
 	//someMethod(1,2,3,4);
 
@@ -42,10 +35,77 @@ int _tmain(int argc, _TCHAR* argv[]) {
 
 	printf("\nFinished. Press ENTER");
 	getchar();
-
 	return 0;
 }
+void testString() {
+	printf("==== Testing String ====\n");
 
+	/// startsWith(string,string)
+	{
+		assert(String::startsWith("abcd", "abc"));
+		assert(!String::startsWith("abcd", "aabc"));
+	}
+	/// endsWith(string,string)
+	{
+		assert(String::endsWith("abcd", string("bcd")));
+		assert(!String::endsWith("abcd", string("aabc")));
+	}
+	/// contains
+	{
+		assert(String::contains("abcde", "cd"));
+		assert(!String::contains("abcde", "Cd"));
+	}
+	/// trimRight
+	{
+		assert(String::trimRight("abc  ")=="abc");
+	}
+	/// trimLeft
+	{
+		assert(String::trimLeft("\t abc")=="abc");
+	}
+	/// trimBoth
+	{
+		assert(String::trimBoth("  \n123 \t ")=="123");
+	}
+	/// split(string)
+	{
+		auto vec = String::split(" 0  1\n2 \t3 ");
+		assert(vec.size()==4);
+		assert(vec[0]=="0" && vec[1]=="1" && vec[2]=="2" && vec[3]=="3");
+	}
+	/// split(string,char)
+	{
+		auto vec = String::split("0,1,2,3", ',');
+		assert(vec.size()==4);
+		assert(vec[0] == "0" && vec[1] == "1" && vec[2] == "2" && vec[3] == "3");
+	}
+	/// toString(vector<string>, string)
+	{
+		vector<string> vec{"0","1"};
+		auto s = String::toString(vec, ", ");
+		assert(s=="0, 1");
+	}
+	/// toString(int)
+	{
+		assert(String::toString(int(96))=="96");
+	}
+	/// toString(slong)
+	{
+		slong a = 911;
+		string s1 = String::toString(a);
+		string s2 = String::toString((slong)543);
+		assert(s1 == "911");
+		assert(s2 == "543");
+	}
+	/// toInt(string)
+	{
+		assert(String::toInt("436")==436);
+	}
+	/// toFloat(string)
+	{
+		assert(String::toFloat("3.14")==3.14f);
+	}
+}
 int someMethod(int a, int b, int c, int d) {
 	printf("%d%d%d%d\n",a,b,c,d);
 	return a+b+c+d;
@@ -61,118 +121,6 @@ void assertEquals(const char* a, const char* b) {
 		i++;
 	}
 }	
-
-uint _parseUint(char* buf, uint n) {
-	uint pos = 30;
-	do{
-		uint rem = (uint)(n%10);
-		n /= 10;
-		buf[--pos] = '0'+rem;
-	}while(n>0);
-	return pos;
-}
-
-void testString() {
-	printf("\n\nTesting String========================\n");
-	
-	// constructors
-	String s1;
-	String s2(true);
-	String s3(12);
-	String s4("hello");
-	String s5('l');		
-	String s6(0x7fffffffffffffffULL);
-	String s7(3.7f);
-	String s8(4.4);
-	String s9(s2);
-	String s10(String("poop"));
-
-	assert(s1=="");
-	assert(s2=="true");
-	assert(s3=="12");
-	assert(s4=="hello");
-	assert(s5=="l");
-	assert(s6=="9223372036854775807");
-	assert(s7=="3.7");
-	assert(s8=="4.4");
-	assert(s9=="true");
-	assert(s10=="poop");
-
-	String a1 = "peter moore";
-	String a2("monkey magic");
-	String a3("peter moore woz here", 0, 15);
-	String a4("peter moore", 1, 5);
-	String a5(a3, 0, 11);
-	String a6(a3, 6, 11);
-
-	assert(a1=="peter moore");
-	assert(a2=="monkey magic");
-	assert(a3=="peter moore woz");
-	assert(a4=="eter");
-	assert(a5=="peter moore");
-	assert(a6=="moore");
-	
-	//printf("s1 = %s\n", s1.cStr());
-	//printf("s2 = %s\n", s2);
-	//printf("s3 = %s\n", s3);
-	//printf("s4 = %s\n", s4);
-	//printf("s5 = %s\n", s5);
-	//printf("s6 = %s\n", s6);
-	//printf("s7 = %s\n", s7);
-	//printf("s8 = %s\n", s8);
-	//printf("s9 = %s\n", s9);
-	//printf("s4[2] = %c\n", s4[2]);
-	
-	// copy constructors
-	String s11 = s2;		// copy construct
-	String s12 = "there";	// copy construct
-	assert(s11=="true");
-	assert(s12=="there");
-	//printf("s10 = %s\n", s10);
-	//printf("s11 = %s\n", s11);
-
-	// copy assignment
-	//printf("--- copy assignment ---\n");
-	String s13("original");
-	s13 = s4;
-	assert(s13=="hello");
-	//printf("%s\n", s12);
-	String s13_2 = "green";
-	assert(s13_2=="green");
-	//printf("%s\n", s12_2);
-
-
-	printf("--- indexOf ---\n");
-	assert(s4.indexOf("h")==0 && s4.indexOf("e")==1 && s4.indexOf("l")==2 && s4.indexOf("o")==4 && s4.indexOf("w")==-1);
-	assert(s4.indexOf(s5)==2 && s4.indexOf(s2)==-1);
-
-	/*
-	//printf("--- lastIndexOf ---\n");
-	assert(s4.lastIndexOf("h")==0 && s4.lastIndexOf("e")==1 && s4.lastIndexOf("l")==3 && s4.lastIndexOf("o")==4 && s4.lastIndexOf("w")==-1);
-
-	printf("--- substring ---\n");
-	String ss1 = "Peter moore";
-	String ss2 = ss1.substring(0, 11);
-	//String ss3 = ss1.substring(6);
-	//assert(ss2=="Peter moore");
-	//assert(ss3=="moore");
-
-	//printf("--- cStr ---\n");
-	//String c1 = "peter";
-	//assert(core_strcmp(c1.cStr(), "peter", 5));
-
-	//printf("getUpperCase\n");
-	//String s13("Hello there");
-	//printf("%s --> %s\n", s13, s13.getUpperCase());
-	*/
-
-	printf("--- lowerCased() ---\n");
-	String lc1("This is a string. Hi there!");
-	StringRef lc2 = lc1.lowerCased();
-
-	// TODO - this is crap
-	assert(*(lc2.get())=="this is a string. hi there!");
-}
 
 DWORD doSomething(void* args) {
 	uint* p = (uint*)args;
@@ -301,8 +249,9 @@ void testCharBuf() {
 
 	delete buf2;
 }
-
 void testFile() {
 	printf("\n\nTesting File\n==================\n");	
+
+	// todo
 }
 

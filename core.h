@@ -38,7 +38,8 @@ namespace core {
 
 #include "log.h"
 #include "math.h" 
-#include "String.h"
+#include "string.h"
+#include "wstring.h"
 #include "CharBuf.h"
 #include "File.h"
 #include "Stream.h"

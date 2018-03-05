@@ -188,8 +188,9 @@
     <ClInclude Include="semaphore.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Stream.h" />
-    <ClInclude Include="String.h" />
+    <ClInclude Include="string.h" />
     <ClInclude Include="threads.h" />
+    <ClInclude Include="wstring.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="core64.asm" />
