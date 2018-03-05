@@ -26,7 +26,7 @@ int wmain(int argc, const wchar_t* argv[]) {
 
 	testString();
 	//testFile();
-	//testThreads();
+	testThreads();
 	//testCharBuf();
 
 	//someMethod(1,2,3,4);
@@ -134,30 +134,29 @@ void testThreads() {
 	printf("\n\nTesting threads.h\n==================\n");
 
 	printf("[Main] thread ID is %u\n", Thread::currentThreadId());
-	uint arg = 1;
+	uint arg  = 1;
+	uint arg2 = 2;
 
-	auto t1 = new Thread(doSomething, &arg);
-	auto t2 = new Thread(doSomething, &arg);
-	t1->start();
-	t2->start();
-	printf("t1 id = %u\n", t1->id);
-	printf("t1 status before join = %u\n", t1->getStatus());
-	printf("t1 exit code before join = %u\n", t1->getExitCode());
-	t1->sleep(100);
-	t2->yield();
+	Thread t1("One", doSomething, &arg);
+	Thread t2("Two", doSomething, &arg2);
+	t1.start();
+	t2.start();
+	printf("t1 id = %u, name='%s'\n", t1.id, t1.name.c_str());
+	printf("t2 id = %u, name='%s'\n", t2.id, t2.name.c_str());
+	printf("t1 status before join = %u\n", t1.getStatus());
+	printf("t1 exit code before join = %u\n", t1.getExitCode());
+	t1.sleep(100);
+	t2.yield();
 	
-	t1->join();
-	t2->join();
+	t1.join();
+	t2.join();
 	printf("[Main] I am the main thread again\n");
-	printf("t1 status = %u\n", t1->getStatus());
-	printf("t2 status = %u\n", t2->getStatus());
-	printf("t1 exit code = %u\n", t1->getExitCode());
-	printf("t2 exit code = %u\n", t2->getExitCode());
+	printf("t1 status = %u\n", t1.getStatus());
+	printf("t2 status = %u\n", t2.getStatus());
+	printf("t1 exit code = %u\n", t1.getExitCode());
+	printf("t2 exit code = %u\n", t2.getExitCode());
 
-	printf("t1 cycles used = %zu\n", t1->getCyclesUsed());
-
-	delete t1;
-	delete t2;
+	printf("t1 cycles used = %zu\n", t1.getCyclesUsed());
 }
 
 void testCharBuf() {

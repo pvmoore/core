@@ -1,4 +1,7 @@
 #pragma once
+///
+///	Todo - manage thread creation etc from within a ThreadPool.
+///
 
 #include <atomic>
 
@@ -12,8 +15,6 @@ public:
 	~ThreadPool() {}
 };
 
-DWORD thread_wrapper_func(void* argPtr);
-
 class Thread {
 public:
 	enum Status : uint { NOT_STARTED, RUNNING, FINISHED };
@@ -22,42 +23,48 @@ public:
 		DWORD(*func)(void*);
 		void* args;
 	};
-	DWORD id; // thread 
 private:
-	HANDLE handle;
-	std::atomic<uint> status;
+	HANDLE handle = nullptr;
+	std::atomic<uint> status = Status::NOT_STARTED;
 	FuncWrapperArgs args;
-
-	
-
-	
 
 	void close() {
 		if(handle) {
 			// this might throw an exception if _endthread has been called
 			CloseHandle(handle);
 			handle = nullptr;
-		}	
-		setStatus(FINISHED);
+		}
+		setStatus(Status::FINISHED);
 	}
 public:
-	Status getStatus() { return (Status)status.load(); }
-	void setStatus(Status s) { status.store(s); }
+	DWORD id; 
+	std::string name;
 
-	Thread(DWORD(*function)(void*), void* functionArgs) :
-		handle(nullptr),
-		args({this,function,functionArgs}),
-		status(NOT_STARTED)
-	{
-	}
+	Thread(std::string name, DWORD(*function)(void*), void* functionArgs) : 
+		name(name), args({this,function,functionArgs}) {}
 	~Thread() {
 		close();
 	}
 
+	Status getStatus() { return (Status)status.load(); }
+	void setStatus(Status s) { status.store(s); }
 	void start() {
-		if(getStatus() == NOT_STARTED) {
-			handle = CreateThread(nullptr, 0, thread_wrapper_func, &args, 0, &id);
-			setStatus(RUNNING);
+		if(getStatus() == Status::NOT_STARTED) {
+
+			const auto wrapper = [](void* argsPtr)->DWORD {
+				auto args = *(Thread::FuncWrapperArgs*)argsPtr;
+
+				// call the user function
+				uint exitCode = args.func(args.args);
+
+				// this thread is now exiting
+				args.t->setStatus(Thread::FINISHED);
+
+				return exitCode;
+			};
+
+			handle = CreateThread(nullptr, 0, wrapper, &args, 0, &id);
+			setStatus(Status::RUNNING);
 		}
 	}
 	/*
@@ -74,27 +81,29 @@ public:
 		BOOL result = SetThreadPriority(handle, p);
 	}
 	bool isFinished() { 
-		return getStatus() == FINISHED;
+		return getStatus() == Status::FINISHED;
 	}
 	DWORD getExitCode() {
-		if(getStatus() != FINISHED) return STILL_ACTIVE;
+		if(getStatus() != Status::FINISHED) return STILL_ACTIVE;
 
 		DWORD exitCode;
 		GetExitCodeThread(handle, &exitCode);
 		return exitCode;
 	}
 	void join(DWORD millis=INFINITE) {
-		if(getStatus() == RUNNING) {
+		if(getStatus() == Status::RUNNING) {
 			auto result = WaitForSingleObject(handle, millis);
 		}
 	}
+	/// Suspends the thread
 	void suspend() {
 		auto result = SuspendThread(handle);
 	}
+	/// Resumes from suspension
 	void resume() {
 		auto result = ResumeThread(handle);
 	}
-	ulong getCyclesUsed() {
+	ulong getCyclesUsed() const {
 		ulong ticks;
 		QueryThreadCycleTime(handle, &ticks);
 		return ticks;
@@ -102,18 +111,18 @@ public:
 
 	//================================================  statics
 
-	// Park current thread for millis ms. Switches to another thread
+	/// Park current thread for millis ms. Switches to another thread
 	static void sleep(uint millis) {
 		Sleep(millis);
 	}
-	// Allow another thread on the same processor to run
-	// if available, otherwise return immediately.
+	/// Allow another thread on the same processor to run
+	/// if available, otherwise return immediately.
 	static void yield() {
-		auto success = SwitchToThread();
+		SwitchToThread();
 	}
-	static DWORD currentThreadId() {
+	static uint currentThreadId() {
 		return GetCurrentThreadId();
 	}
 };
 
-} // namespace core
+} /// core
