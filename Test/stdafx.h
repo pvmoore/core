@@ -34,8 +34,10 @@ static_assert(_WIN64 == 1, "Expecting to be in 64-bit mode");
 #include <tchar.h>
 #include <crtdbg.h>
 #include <assert.h>
-#include <memory>
 
-// TODO: reference additional headers your program requires here
+/// std namespace files
+#define _ALLOW_RTCc_IN_STL
+#include <memory>
+#include <chrono>
 
 #include "../core.h"

@@ -15,20 +15,6 @@ void benchmark();
 
 #pragma intrinsic(__rdtsc)
 
-void __declspec(noinline) pants(uint* a, float b, uint c, uint d, uint e, float f) {
-	int aa = *a;
-	printf("%d %f %d %d %d %f\n", aa,b,c,d,e,f);
-
-	volatile ubyte* mem = (ubyte*)malloc(1000);
-
-	mem[0] = '0';
-	mem[1] = 0;
-
-	printf("%s\n", mem);
-
-	free((void*)mem);
-}
-
 int _tmain(int argc, _TCHAR* argv[]) {
 #ifdef _DEBUG
 	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF);
@@ -45,21 +31,13 @@ int _tmain(int argc, _TCHAR* argv[]) {
 	printf("ptrdiff_t=%zu\n", sizeof(ptrdiff_t));
 	printf("DWORD=%zu\n", sizeof(DWORD));
 
-	//uint a = 123456;
-	//volatile int b = 234567;
-	//volatile int c = 345678;
-	//volatile int d = 456789;
-	//volatile int e = 456789;
-	//volatile float f = 1.3f;
-	//pants(&a,(float)b,c,d,e,f);
-
-	//testFile();
-	//testString();
+	testFile();
+	testString();
 	testThreads();
-	//testArray();
-	//testCharBuf();
-	//testHashMap();
-	//testLinkedList();
+	testArray();
+	testCharBuf();
+	testHashMap();
+	testLinkedList();
 
 	//someMethod(1,2,3,4);
 
