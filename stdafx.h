@@ -39,5 +39,6 @@ static_assert(_WIN64==1, "Expecting to be in 64-bit mode");
 #define _ALLOW_RTCc_IN_STL
 #include <memory>
 #include <atomic>
+#include <string>
 
 #include "core.h"

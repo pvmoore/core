@@ -1,35 +1,55 @@
 #pragma once
 
-#include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
-
 namespace core {
 
 class Log {
-	const char* fn = nullptr;
-	FILE* fp;
+	static FILE* fp;
 public:
-	Log(const char* filename) : fn(filename) {}
-	~Log() { if(fp) fclose(fp); fp = nullptr; }
-
-	void write(const char* fmt, ...) {
+	~Log() {
+		if(fp) fclose(fp);
+		fp = nullptr;
+	}
+	static void write(const char* fmt, ...) {
 		if(!fp) {
-			if(0 != fopen_s(&fp, fn, "w")) return;
+			if(0 != fopen_s(&fp, "log.log", "w, ccs=UTF-8")) return;
 		}
 
-		char text[256];							
-		va_list	ap;									
+		/// Use this for small strings
+		char text[512];
+		va_list	ap;
 
-		va_start(ap, fmt);														
-		vsprintf_s(text, fmt, ap);
-		va_end(ap);		
+		va_start(ap, fmt);
+		/// Count number of characters required
+		int count = _vscprintf(fmt, ap) + 1;
+		char* buf = (count < _countof(text)) ? text : (char*)malloc(count);
+		vsprintf_s(buf, count, fmt, ap);
+		va_end(ap);
 
-		fwrite(text, 1, strlen(text), fp);
-		fwrite("\r\n", 1, 2, fp);
+		fwrite(buf, 1, strlen(buf), fp);
+		fwrite("\n", 1, 1, fp);
 		fflush(fp);
+
+		if(buf != text) free(buf);
+	}
+	/// Output debug messages
+	static void dbg(const char* fmt, ...) {
+#ifdef _DEBUG
+		/// Use this for small strings
+		char text[512];
+		va_list	ap;
+
+		va_start(ap, fmt);
+		int count = _vscprintf(fmt, ap) + 1;
+		char* buf = (count < _countof(text)) ? text : (char*)malloc(count);
+		vsprintf_s(buf, count, fmt, ap);
+		va_end(ap);
+
+		OutputDebugStringA(buf);
+		OutputDebugStringA("\n");
+
+		if(buf != text) free(buf);
+#endif
 	}
 };
 
-
-} // namespace core
+} /// namespace core
