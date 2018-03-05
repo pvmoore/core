@@ -13,7 +13,6 @@ class Queue {
 	uint r = 0, w = 0, mask = CAPACITY - 1;
 	static_assert(__popcnt(CAPACITY) == 1);
 public:
-	Queue() { static_assert(__popcnt(CAPACITY) == 1); }
 	uint length() const { return w - r; }
 	bool empty() const { return length() == 0; }
 	auto push(T value) {
