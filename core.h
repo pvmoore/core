@@ -16,7 +16,7 @@ namespace core {
 #include "math.h" 
 #include "string.h"
 #include "wstring.h"
-#include "CharBuf.h"
+#include "charbuffer.h"
 #include "file.h"
 #include "mutex.h"
 #include "semaphore.h"

@@ -1,11 +1,10 @@
-#include "stdafx.h"
+#include "_pch.h"
 #include "../core.h"
-#include <vector>
-#include <chrono>
 
 using namespace core;
 using std::vector;
 using std::chrono::high_resolution_clock;
+using std::string;
 
 void benchMemset();
 void benchCore();
@@ -51,9 +50,29 @@ void benchCore() {
 }
 
 void benchCharBuf() {
+	printf("Benching CharBuf\n");
+	CharBuffer buf;
+	string str;
+#define CB
 	auto start = high_resolution_clock::now();
-
+	for(int j = 0; j < 1000; j++) {
+#ifdef CB
+		buf.clear();
+#else
+		str.clear();
+		str.shrink_to_fit();
+#endif
+		for(int i = 0; i < 100000; i++) {
+#ifdef CB
+			buf.append("hello");
+#else
+			str += "hello";
+#endif
+		}
+	}
 	auto end = high_resolution_clock::now();
+	printf("CB  Result = %u\n", buf.length());
+	printf("STR Result = %llu\n", str.size());
 	auto elapsedMs = (end-start).count() * 1e-6;
 	printf("Elapsed: %.3f ms\n", elapsedMs);
 }

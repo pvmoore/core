@@ -17,7 +17,6 @@ public:
 		/// Use this for small strings
 		char text[512];
 		va_list	ap;
-
 		va_start(ap, fmt);
 		/// Count number of characters required
 		int count = _vscprintf(fmt, ap) + 1;

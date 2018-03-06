@@ -182,7 +182,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CharBuf.h" />
+    <ClInclude Include="charbuffer.h" />
     <ClInclude Include="core.h" />
     <ClInclude Include="_defines.h" />
     <ClInclude Include="file.h" />

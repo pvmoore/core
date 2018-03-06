@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "_pch.h"
 #include "../core.h"
 
 using namespace core;
@@ -9,7 +9,7 @@ void testFile();
 void testFileReader();
 void testFileWriter();
 void testThreads();
-void testCharBuf();
+void testCharBuffer();
 void testString();
 
 void benchmark();
@@ -26,7 +26,7 @@ int wmain(int argc, const wchar_t* argv[]) {
 	testFileReader();
 	testFileWriter();
 	testThreads();
-	//testCharBuf();
+	testCharBuffer();
 
 #else
 	benchmark();
@@ -153,7 +153,7 @@ void testThreads() {
 
 void assertEquals(const char* a, const char* b) {
 	if(a == b) return;
-	if(a == NULL || b == NULL) assert(0);
+	if(a == nullptr || b == nullptr) assert(0);
 	if(strlen(a) != strlen(b)) assert(0);
 	int i = 0;
 	while(a[i] && b[i]) {
@@ -161,101 +161,177 @@ void assertEquals(const char* a, const char* b) {
 		i++;
 	}
 }
-void testCharBuf() {
-	printf("\n\nTesting CharBuf\n==================\n");
-	CharBuf buf("hello");
-	CharBuf* buf2 = new CharBuf("there");
-	CharBuf buf3;
-	CharBuf buf4(buf);
-	CharBuf buf5;
-	CharBuf buf6("ABCD", 2);
+void testCharBuffer() {
+	printf("==== Testing charbuffer.h ====\n");
 
-	buf.append(" ");
-	buf.append(buf2->cStr());
-	buf5.append("abcd", 3);
+	const auto areEqual = [](const char* a, const char* b)->bool {
+		if(a == b) return true;
+		if(a == nullptr || b == nullptr) return false;
+		auto len = strlen(a);
+		if(len != strlen(b)) return false;
+		for(int i=0; i<len; i++) {
+			if(a[i] != b[i]) return false;
+		}
+		return true;
+	};
 
-	printf("%s (%d)\n", buf.cStr(), buf.length());
-	printf("%s (%d)\n", buf2->cStr(), buf2->length());
-	printf("%s (%d)\n", buf3.cStr(), buf3.length());
-	printf("%s (%d)\n", buf4.cStr(), buf4.length());
-	printf("%s (%d)\n", buf5.cStr(), buf5.length());
-	printf("%s (%d)\n", buf6.cStr(), buf6.length());
+	/// constructors
+	{
+		printf("CharBuffer()\n");
+		CharBuffer c;
+		assert(c.length()==0 && c.capacity()==0 && c.empty());
+	}
+	{
+		printf("CharBuffer(const char*,int)\n");
+		CharBuffer c{"Hello", 5};
+		assert(c.length()==5 && c.capacity()>=5 && !c.empty());
+		printf("\tcapacity=%u\n", c.capacity());
+	}
+	/// c_str()
+	{
+		printf("c_str()\n");
+		CharBuffer c{"a string"};
+		assert(areEqual(c.c_str(),"a string"));
+		assert(areEqual(CharBuffer{""}.c_str(), ""));
+		assert(areEqual(CharBuffer{"1"}.c_str(), "1"));
+	}
+	/// clear
+	{
+		printf("clear()\n");
+		CharBuffer c{"some text"};
+		assert(!c.empty());
+		c.clear();
+		assert(c.empty() && c.length()==0 && c.capacity()>0);
+	}
+	/// pack
+	{
+		printf("pack()\n");
+		CharBuffer c{"some text"};
+		c.clear();
+		c.pack();
+		assert(c.empty() && c.length()==0 && c.capacity()==1); // space for /0
+	}
+	/// operator==(const char*), operator!=(const char*)
+	{
+		printf("operator==(const char*)\n");
+		CharBuffer c{"hello"};
+		assert(c=="hello");
+		assert(CharBuffer{}=="");
+		assert(c!="Hello");
+		assert(c!="");
+		assert(c!=nullptr);
+		assert("hello"==c); // friend
+		assert("hi"!=c);	// friend
+	}
+	/// operator==(string), operator!=(string)
+	{
+		printf("operator==(string)\n");
+		CharBuffer c{"hello"};
+		assert(c == string("hello"));
+		assert(CharBuffer{} == string(""));
+		assert(c != string("Hello"));
+		assert(c != string(""));
+		assert(string("hello") == c); // friend
+		assert(string("hi") != c);	// friend
+	}
+	/// operator[] const
+	{
+		printf("operator[] const\n");
+		CharBuffer c{"hello"};
+		assert(c[0]=='h');
+	}
+	/// append(string)
+	{
+		printf("append(string)\n");
+		CharBuffer c{};
+		c.append(string("hello"))
+		 .append(string(" there"));
 
-	// test append string and chaining
-	CharBuf a1("a");
-	a1.append("b").append("c");
-	a1 += "d";
-	printf("%s (%d)\n", a1.cStr(), a1.length());
+		assert(c.length()==11 && c=="hello there");
+	}
+	/// append(const char*)
+	{
+		printf("append(const char*)\n");
+		CharBuffer c{};
+		c.append("hello")
+		 .append(" there");
 
-	CharBuf i1("abcdef");
+		assert(c.length() == 11 && c == "hello there");
+	}
+	/// appendFmt(const char*, ...)
+	{
+		printf("appendFmt(const char*, ...)\n");
+		CharBuffer c{};
+		c.appendFmt("%s", "hello")
+		 .appendFmt("%d,", 5)
+		 .appendFmt("%.2f", 3.143f);
 
-	// test indexOf(char,int,int)
-	assert(i1.indexOf('a')==0);
-	assert(i1.indexOf('f')==5);
-	assert(i1.indexOf('z')==-1);
-
-	assert(i1.indexOf('c', 0)==2);
-	assert(i1.indexOf('c', 1)==1);
-	assert(i1.indexOf('c', 2)==0);
-	assert(i1.indexOf('c', 3)==-1);
-
-	assert(i1.indexOf('c', 0, 6)==2);
-	assert(i1.indexOf('f', 0, 6)==5);
-	assert(i1.indexOf('f', 0, 5)==-1);
-	assert(i1.indexOf('f', 1, 6)==4);
-	assert(i1.indexOf('f', 5, 6)==0);
-
-	// test indexOf(char*,int,int)
-	assert(i1.indexOf("a")==0);
-	assert(i1.indexOf("f")==5);
-	assert(i1.indexOf("z")==-1);
-	assert(i1.indexOf("bc")==1);
-	assert(i1.indexOf("ba")==-1);
-	assert(i1.indexOf("abcdef")==0);
-	assert(i1.indexOf("ef")==4);
-
-	assert(i1.indexOf("ef", 0)==4);
-	assert(i1.indexOf("ef", 1)==3);
-	assert(i1.indexOf("ef", 4)==0);
-	assert(i1.indexOf("ef", 5)==-1);
-	assert(i1.indexOf("abcdef", 1)==-1);
-	
-	assert(i1.indexOf("ef", 0, 6)==4);
-	assert(i1.indexOf("ef", 0, 5)==-1);
-	assert(i1.indexOf("ef", 1, 6)==3);
-	assert(i1.indexOf("ef", 4, 6)==0);
-
-	// test append int, double and clear
-	CharBuf b1;
-	b1.append("one").append(1);
-	assertEquals("one1", b1.cStr());
-	b1.append("two").append(2);
-	assertEquals("one1two2", b1.cStr());
-	b1.clear();
-	b1.append(-1);
-	assertEquals("-1", b1.cStr());
-	b1.append(123456789);
-	assertEquals("-1123456789", b1.cStr());
-	b1.clear();
-	b1.append(3.14, 2);
-	assertEquals("3.14", b1.cStr());
-
-	// test operator[]
-	b1.clear();
-	b1 += "abcdefg";
-	assert(b1[0]=='a');
-	assert(b1[6]=='g');
-	b1[1] = 'B';
-	assertEquals("aBcdefg", b1.cStr());
-
-	delete buf2;
+		assert(c.length()==11 && c=="hello5,3.14");
+	}
+	/// contains(const char*)
+	{
+		printf("contains(const char*)\n");
+		CharBuffer c{"hello"};
+		assert(c.contains("ll"));
+		assert(c.contains("hello"));
+		assert(c.contains("ello"));
+		assert(c.contains("llo"));
+		assert(c.contains("lo"));
+		assert(c.contains("o"));
+		assert(!c.contains(""));
+		assert(!c.contains("la"));
+	}
+	/// contains(string)
+	{
+		printf("contains(string)\n");
+		CharBuffer c{"hello"};
+		assert(c.contains(string("ll")));
+		assert(c.contains(string("hello")));
+		assert(c.contains(string("ello")));
+		assert(c.contains(string("llo")));
+		assert(c.contains(string("lo")));
+		assert(c.contains(string("o")));
+		assert(!c.contains(string("")));
+		assert(!c.contains(string("la")));
+	}
+	/// indexOf(const char*, int) 
+	{
+		printf("indexOf(const char*,int)\n");
+		CharBuffer c{"hello"};
+		assert(c.indexOf("hello")==0);
+		assert(c.indexOf("ello") == 1);
+		assert(c.indexOf("llo") == 2);
+		assert(c.indexOf("ll") == 2);
+		assert(c.indexOf(nullptr)==-1);
+		assert(c.indexOf("")==-1);
+		assert(c.indexOf("hello",1)==-1);
+	}
+	/// indexOf(string, int)
+	{
+		printf("indexOf(string,int)\n");
+		CharBuffer c{"hello"};
+		assert(c.indexOf(string("hello")) == 0);
+		assert(c.indexOf(string("")) == -1);
+	}
+	/// indexOf(char, int)
+	{
+		printf("indexOf(char,int)\n");
+		CharBuffer c{"hello"};
+		assert(c.indexOf('h')==0);
+		assert(c.indexOf('e') == 1);
+		assert(c.indexOf('l') == 2);
+		assert(c.indexOf('o') == 4);
+		assert(c.indexOf('z') == -1);
+		assert(c.indexOf((char)0) == -1);
+		assert(c.indexOf('h',1)==-1);
+	}
 }
 void testFile() {
 	printf("==== Testing file.h (File) ====\n");
 	/// File::exists
 	{
 		printf("File::exists(string)\n");
-		assert(File::exists("stdafx.h"));
+		assert(File::exists("../LICENSE"));
 	}
 	/// File::size
 	{
@@ -296,7 +372,7 @@ void testFile() {
 		printf("File::isFile(string)\n");
 		assert(false==File::isFile("Debug"));
 		assert(false == File::isFile("."));
-		assert(File::isFile("stdafx.h"));
+		assert(File::isFile("../LICENSE"));
 	}
 }
 void testFileReader() {
