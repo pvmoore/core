@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "../core.h"
 
 using namespace core;
 using std::string;
