@@ -382,6 +382,23 @@ void testFile() {
 		assert(text.find("MIT License")==0);
 		assert(text.find("SOFTWARE.")==1089-11); // assumes it ends in \r\n
 	}
+	/// File::readBinary(string, [])
+	{
+		printf("File::readBinary(string,[])\n");
+		char array[1089];
+		auto num = File::readBinary("../LICENSE", array);
+		assert(num==1089);
+		assert(array[0] == 'M');
+		assert(array[1] == 'I');
+		assert(array[2] == 'T');
+
+		char array2[16];
+		auto num2 = File::readBinary("../LICENSE", array2);
+		assert(num2==16);
+		assert(array2[0] == 'M');
+		assert(array2[1] == 'I');
+		assert(array2[2] == 'T');
+	}
 }
 void testFileReader() {
 	printf("==== Testing file.h (FileReader) ====\n");

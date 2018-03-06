@@ -5,6 +5,7 @@
 namespace core {
 	/// 
 	extern "C" {
+		/// None of these are  currently used
 		void core_memcpy(char* const dest, const char* const src, uint length);
 		void core_memset(char* const dest, ubyte value, uint length);
 		int core_indexof(const char* const haystack, const char* const needle, uint haystackLength, uint needleLength);
@@ -12,6 +13,7 @@ namespace core {
 	//__thread const char* errorMessage;
 }
 
+#include "types.h"
 #include "log.h"
 #include "math.h" 
 #include "string.h"

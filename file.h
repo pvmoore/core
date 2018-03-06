@@ -127,7 +127,7 @@ public:
 	/// Reads an entire text file.
 	template<uint BUFFER_SIZE=4096>
 	static std::string readText(const std::string& filename) {
-		FILE* f = nullptr;
+		FILE* f;
 		throwOnError(fopen_s(&f, filename.c_str(), "rb"));
 		
 		auto length = File::size(filename);
@@ -145,6 +145,20 @@ public:
 		}
 		fclose(f);
 		return result;
+	}
+	/// Reads an entire binary file into _array_.
+	/// Returns the number of bytes read.
+	template<typename T, uint N>
+	static ulong readBinary(const std::string& filename, const T(&array)[N]) {
+		FILE* f;
+		throwOnError(fopen_s(&f, filename.c_str(), "rb"));
+
+		auto length       = File::size(filename);
+		ulong bytesToRead = Math::min<ulong>(length, N);
+		ulong num	      = fread_s((void*)array, N, 1, bytesToRead, f);
+
+		fclose(f);
+		return num;
 	}
 };
 
