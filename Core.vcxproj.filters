@@ -12,23 +12,15 @@
     <Filter Include="Asm">
       <UniqueIdentifier>{89dad284-109b-4283-91be-e231575c4924}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <Filter Include="_Headers">
+      <UniqueIdentifier>{23221927-02ba-4719-8b3f-be24b7314e44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CharBuf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="core.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="log.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mutex.h">
@@ -58,10 +50,24 @@
     <ClInclude Include="string.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="core.h">
+      <Filter>_Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="_defines.h">
+      <Filter>_Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="_pch.h">
+      <Filter>_Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="core64.asm">
       <Filter>Asm</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="statics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

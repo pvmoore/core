@@ -107,6 +107,7 @@
       <AdditionalOptions>/execution-charset:.1252 /source-charset:.1252 %(AdditionalOptions)</AdditionalOptions>
       <StringPooling>true</StringPooling>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <PrecompiledHeaderFile>_pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -169,10 +170,11 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/execution-charset:.1252 /source-charset:.1252 %(AdditionalOptions)</AdditionalOptions>
       <MinimalRebuild>true</MinimalRebuild>
+      <PrecompiledHeaderFile>_pch.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="statics.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -182,6 +184,7 @@
   <ItemGroup>
     <ClInclude Include="CharBuf.h" />
     <ClInclude Include="core.h" />
+    <ClInclude Include="_defines.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="map.h" />
@@ -189,7 +192,7 @@
     <ClInclude Include="mutex.h" />
     <ClInclude Include="queue.h" />
     <ClInclude Include="semaphore.h" />
-    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="_pch.h" />
     <ClInclude Include="string.h" />
     <ClInclude Include="thread.h" />
     <ClInclude Include="wstring.h" />

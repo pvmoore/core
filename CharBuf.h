@@ -82,11 +82,11 @@ public:
 		return append(temp, len);
 	}
 	CharBuf& append(slong i) {
-		assert(i<=MAX_SINT && "unsupported");
+		assert(i<=INT32_MAX && "unsupported");
 		return append((int)i);
 	}
 	CharBuf& append(ulong i) {
-		assert(i <= MAX_UINT && "unsupported");
+		assert(i <= UINT32_MAX && "unsupported");
 		return append((uint)i);
 	}
 	CharBuf& append(double d, uint dp=-1) {

@@ -37,6 +37,7 @@ static_assert(_WIN64==1, "Expecting to be in 64-bit mode");
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <exception>
 
 #pragma warning(disable : 4101) /// unused variable
 

@@ -6,6 +6,8 @@ using std::string;
 using std::vector;
 
 void testFile();
+void testFileReader();
+void testFileWriter();
 void testThreads();
 void testCharBuf();
 void testString();
@@ -20,7 +22,9 @@ int wmain(int argc, const wchar_t* argv[]) {
 	printf("============== Running tests\n\n");
 
 	testString();
-	//testFile();
+	testFile();
+	testFileReader();
+	testFileWriter();
 	testThreads();
 	//testCharBuf();
 
@@ -247,8 +251,67 @@ void testCharBuf() {
 	delete buf2;
 }
 void testFile() {
-	printf("\n\nTesting File\n==================\n");	
+	printf("==== Testing file.h (File) ====\n");
+	/// File::exists
+	{
+		printf("File::exists(string)\n");
+		assert(File::exists("stdafx.h"));
+	}
+	/// File::size
+	{
+		printf("File::size(string)\n");
+		assert(File::size("../LICENSE")==1089);
+	}
+	/// File::createTemp(string)
+	string filename, renamedFilename;
+	{
+		printf("File::createTemp(string)\n");
+		filename = File::createTemp("_temp");
+		printf("\tCreated temp file '%s'\n", filename.c_str());
+	}
+	/// File::rename(string,string)
+	{
+		printf("File::rename(string,string)\n");
+		renamedFilename = filename + "_renamed";
+		assert(File::rename(filename, renamedFilename));
+		printf("\tRenamed to '%s'\n", renamedFilename.c_str());
+	}
+	/// File::remove(string)
+	{
+		printf("File::remove(string)\n");
+		assert(false==File::remove(filename));
+		assert(File::remove(renamedFilename));
+		printf("\tDeleted file '%s'\n", renamedFilename.c_str());
+	}
+	/// File::isDirectory(string)
+	{
+		printf("File::isDirectory(string)\n");
+		assert(File::isDirectory("Debug"));
+		assert(File::isDirectory("."));
+		assert(File::isDirectory(".."));
+		assert(false==File::isDirectory("stdafx.h"));
+	}
+	/// File::isFile(string)
+	{
+		printf("File::isFile(string)\n");
+		assert(false==File::isFile("Debug"));
+		assert(false == File::isFile("."));
+		assert(File::isFile("stdafx.h"));
+	}
+}
+void testFileReader() {
+	printf("==== Testing file.h (FileReader) ====\n");
 
-	// todo
+	FileReader<1024> reader{"../LICENSE"};
+	printf("\tOpened file '%s'\n", reader.path.c_str());
+	printf("\tSize = %lld\n", reader.size);
+	assert(!reader.eof());
+	assert(reader.size == 1089);
+
+	string line = reader.readLine();
+	printf("\tGot line: %s\n", line.c_str());
+}
+void testFileWriter() {
+	printf("==== Testing file.h (FileWriter) ====\n");
 }
 
