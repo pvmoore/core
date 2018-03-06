@@ -2,7 +2,6 @@
 ///
 ///	Fast simple queue. CAPACITY must be a power of 2.
 ///
-
 #include <intrin.h>
 
 namespace core {

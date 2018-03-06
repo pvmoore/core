@@ -5,10 +5,8 @@ namespace core {
 class Semaphore {
 	HANDLE handle;
 public:
-	Semaphore(int initialCount, int maxCount=INFINITE) {
-		handle = CreateSemaphore(nullptr, initialCount, maxCount, nullptr);
-		assert(handle);
-	}
+	Semaphore(int initialCount, int maxCount=INFINITE) : 
+		handle(CreateSemaphore(nullptr, initialCount, maxCount, nullptr)) {}
 	~Semaphore() {
 		if(handle) {
 			CloseHandle(handle);
@@ -32,4 +30,4 @@ public:
 	}
 };
 
-}
+} /// core

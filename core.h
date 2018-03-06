@@ -34,10 +34,10 @@ namespace core {
 
 #include "log.h"
 #include "math.h" 
-#include "string.h"
+#include "string2.h"
 #include "wstring.h"
 #include "CharBuf.h"
-#include "file.h"
+#include "file2.h"
 #include "mutex.h"
 #include "semaphore.h"
 #include "thread.h"

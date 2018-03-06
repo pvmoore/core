@@ -3,7 +3,7 @@
 namespace core {
 
 class Mutex {
-	HANDLE handle = nullptr;
+	HANDLE handle;
 public:
 	Mutex() : handle(CreateMutex(nullptr, FALSE, nullptr)) {}
 	~Mutex() {
