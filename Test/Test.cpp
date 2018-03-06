@@ -374,6 +374,14 @@ void testFile() {
 		assert(false == File::isFile("."));
 		assert(File::isFile("../LICENSE"));
 	}
+	/// File::readText(string)
+	{
+		printf("File::readText(string)\n");
+		auto text = File::readText("../LICENSE");
+		assert(text.size()==1089);
+		assert(text.find("MIT License")==0);
+		assert(text.find("SOFTWARE.")==1089-11); // assumes it ends in \r\n
+	}
 }
 void testFileReader() {
 	printf("==== Testing file.h (FileReader) ====\n");

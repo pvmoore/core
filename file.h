@@ -124,6 +124,28 @@ public:
 		}
 		return false;
 	}
+	/// Reads an entire text file.
+	template<uint BUFFER_SIZE=4096>
+	static std::string readText(const std::string& filename) {
+		FILE* f = nullptr;
+		throwOnError(fopen_s(&f, filename.c_str(), "rb"));
+		
+		auto length = File::size(filename);
+		char buf[BUFFER_SIZE+1];
+		std::string result;
+		result.reserve(length);
+
+		while(length>0) {
+			ulong bytes = Math::min<ulong>(length, BUFFER_SIZE);
+			ulong num   = fread_s(buf, BUFFER_SIZE, 1, bytes, f);
+			length -= num;
+
+			buf[num] = 0;
+			result += buf;
+		}
+		fclose(f);
+		return result;
+	}
 };
 
 } /// namespace core
