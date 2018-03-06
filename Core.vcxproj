@@ -180,7 +180,7 @@
   <ItemGroup>
     <ClInclude Include="CharBuf.h" />
     <ClInclude Include="core.h" />
-    <ClInclude Include="file2.h" />
+    <ClInclude Include="file.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="math.h" />
@@ -188,7 +188,7 @@
     <ClInclude Include="queue.h" />
     <ClInclude Include="semaphore.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="string2.h" />
+    <ClInclude Include="string.h" />
     <ClInclude Include="thread.h" />
     <ClInclude Include="wstring.h" />
   </ItemGroup>
