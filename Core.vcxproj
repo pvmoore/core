@@ -184,6 +184,8 @@
   <ItemGroup>
     <ClInclude Include="charbuffer.h" />
     <ClInclude Include="core.h" />
+    <ClInclude Include="filereader.h" />
+    <ClInclude Include="filewriter.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="_defines.h" />
     <ClInclude Include="file.h" />

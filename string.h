@@ -40,9 +40,9 @@ public:
 		if(s.empty()) return s;
 		if(s[0]<33) {
 			auto s2 = trimLeft(s);
-			return trimRight(s2);
+			return std::move(trimRight(s2));
 		}
-		if(s[s.size() - 1]<33) return trimRight(s);
+		if(s[s.size() - 1]<33) return std::move(trimRight(s));
 		return s;
 	}
 	/// Splits a string using whitespace as separator.
@@ -78,9 +78,7 @@ public:
 			start = pos;
 			while(pos<s.size() && s[pos] != sep) pos++;
 
-			//if(pos > start) {
 			array.push_back(std::string(s.begin() + start, s.begin() + pos));
-			//}
 			pos++;
 		}
 		if(pos > 0 && s[pos - 1] == sep) {
@@ -96,7 +94,7 @@ public:
 			if(i>0) s += delim;
 			s += array[i];
 		}
-		return s;
+		return std::move(s);
 	}
 	inline static std::string toString(int i) {
 		char buf[64];

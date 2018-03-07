@@ -8,68 +8,7 @@ inline void throwOnError(errno_t err) {
 	strerror_s(buf, err);
 	throw std::runtime_error("File error: " + std::string(buf));
 }
-//==================================================================================== FileReader
-template<int BUFFER_SIZE>
-class FileReader {
-	FILE* fp    = nullptr;
-	char buffer[BUFFER_SIZE];
-	int bufferPos = 0;
-	slong filePos = 0;
-	static_assert(BUFFER_SIZE>=1024);
-public:
-	const std::string path;
-	slong size = -1;
 
-	FileReader(const std::string& path) : path(path) {
-		throwOnError(fopen_s(&fp, path.c_str(), "rb"));
-		size = File::size(path);
-	}
-	~FileReader() {
-		if(fp) {
-			fclose(fp);
-			fp = nullptr;
-		}
-	}
-	bool eof() const {
-		return size<=0 || filePos >= size;
-	}
-	std::string readLine() const {
-		if(eof()) return ""; 
-
-		string line;
-
-		//for(int i = bufferPos; i < BUFFER_SIZE; i++) {
-
-		//}
-	
-		// todo
-
-		
-
-		return "";
-	}
-private:
-	void fillBuffer() {
-		slong len = Math::min<slong>(BUFFER_SIZE, size - filePos);
-		printf("len=%lld\n", len);
-
-		auto num = fread((void*)buffer, 1, len, fp);
-		bufferPos = 0;
-		filePos  += num;
-	}
-};
-//==================================================================================== FileWriter
-class FileWriter {
-	FILE* fp = nullptr;
-public:
-	void writeconst(const std::string& fmt, ...) {
-		//uint num = (int)fwrite(data, unitSize, numUnits, fp);
-	}
-	void flush() {
-		fflush(fp);
-	}
-};
-//==================================================================================== File
 class File {
 public:
 	/// Returns true if the file exists.
@@ -98,7 +37,7 @@ public:
 		fclose(f);
 		auto str = std::string(filename);
 		free(filename);
-		return str;
+		return std::move(str);
 	}
 	/// Deletes the specified file.
 	static bool remove(const std::string& path) {
@@ -144,10 +83,11 @@ public:
 			result += buf;
 		}
 		fclose(f);
-		return result;
+		return std::move(result) ;
 	}
 	/// Reads an entire binary file into _array_.
 	/// Returns the number of bytes read.
+	/// Assumes you already know the file size or only want a part of the file.
 	template<typename T, uint N>
 	static ulong readBinary(const std::string& filename, const T(&array)[N]) {
 		FILE* f;
@@ -160,6 +100,13 @@ public:
 		fclose(f);
 		return num;
 	}
+	static void writeText(const std::string& filename, const std::string& text) {
+		// todo
+	}
+	template<typename T, uint N>
+	static void writeBinary(const std::string& filename, const T(&array)[N]) {
+		// todo
+	}
 };
 
-} /// namespace core
+} /// core

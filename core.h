@@ -20,6 +20,8 @@ namespace core {
 #include "wstring.h"
 #include "charbuffer.h"
 #include "file.h"
+#include "filereader.h"
+#include "filewriter.h"
 #include "mutex.h"
 #include "semaphore.h"
 #include "thread.h"

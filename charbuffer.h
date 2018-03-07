@@ -15,7 +15,7 @@ class CharBuffer {
 		}
 	}
 public:
-	CharBuffer() : buf(nullptr), strLength(0), bufLength(0) {};
+	CharBuffer() {};
 	CharBuffer(const char* str) {
 		append(std::string(str));
 	}

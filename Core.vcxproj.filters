@@ -62,6 +62,12 @@
     <ClInclude Include="types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="filereader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="filewriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="core64.asm">

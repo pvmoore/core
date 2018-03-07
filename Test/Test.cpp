@@ -23,10 +23,10 @@ int wmain(int argc, const wchar_t* argv[]) {
 
 	testString();
 	testFile();
-	testFileReader();
-	testFileWriter();
 	testThreads();
 	testCharBuffer();
+	testFileReader();
+	testFileWriter();
 
 #else
 	benchmark();
@@ -403,14 +403,21 @@ void testFile() {
 void testFileReader() {
 	printf("==== Testing file.h (FileReader) ====\n");
 
-	FileReader<1024> reader{"../LICENSE"};
+	FileReader<128> reader{"../LICENSE"};
 	printf("\tOpened file '%s'\n", reader.path.c_str());
 	printf("\tSize = %lld\n", reader.size);
 	assert(!reader.eof());
 	assert(reader.size == 1089);
 
-	string line = reader.readLine();
-	printf("\tGot line: %s\n", line.c_str());
+	vector<string> lines;
+	while(!reader.eof()) {
+		lines.push_back(reader.readLine());
+	}
+	printf("\tRead %llu lines\n", lines.size());
+	assert(lines.size()==21);
+	assert(lines.front()=="MIT License");
+	assert(lines[9]=="furnished to do so, subject to the following conditions:");
+	assert(lines.back()=="SOFTWARE.");
 }
 void testFileWriter() {
 	printf("==== Testing file.h (FileWriter) ====\n");
