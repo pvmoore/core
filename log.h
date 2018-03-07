@@ -49,8 +49,11 @@ public:
 		vsprintf_s(buf, count, fmt, ap);
 		va_end(ap);
 
-		OutputDebugStringA(buf);
-		OutputDebugStringA("\n");
+		if(count > 1) {
+			// Only write if we have more than just "\0"
+			OutputDebugStringA(buf);
+			OutputDebugStringA("\n");
+		}
 
 		if(buf != text) free(buf);
 #endif

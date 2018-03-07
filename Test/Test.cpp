@@ -555,5 +555,9 @@ void testLog() {
 		assert(File::size(filename) == 9); 
 		assert(File::readText(filename) == "hello 7\r\n");
 	}
-
+	/// dbg(const str*,...)
+	{
+		Log::dbg("hello");
+		// This should appear in the output window
+	}
 }
