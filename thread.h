@@ -4,6 +4,7 @@
 ///
 
 #include <atomic>
+#include <Windows.h>
 
 namespace core {
 
