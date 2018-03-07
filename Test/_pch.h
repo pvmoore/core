@@ -37,9 +37,3 @@ static_assert(_WIN64 == 1, "Expecting to be in 64-bit mode");
 #include <vector>
 #include <chrono>
 #include <unordered_map>
-
-//using std::shared_ptr;
-//using std::unique_ptr;
-//using std::string;
-//using std::wstring;
-//using std::vector;

@@ -90,24 +90,36 @@ public:
 	/// Assumes you already know the file size or only want a part of the file.
 	template<typename T, uint N>
 	static ulong readBinary(const std::string& filename, const T(&array)[N]) {
-		FILE* f;
-		throwOnFileError(fopen_s(&f, filename.c_str(), "rb"));
+		FILE* fp;
+		throwOnFileError(fopen_s(&fp, filename.c_str(), "rb"));
 
 		auto length        = File::size(filename);
 		auto elementSize   = sizeof(T);
 		auto bufferSize    = N * elementSize;
 		auto elementCount  = Math::min<ulong>(length / elementSize, N);
-		auto num	       = fread_s((void*)array, bufferSize, elementSize, elementCount, f);
+		auto num	       = fread_s((void*)array, bufferSize, elementSize, elementCount, fp);
 
-		fclose(f);
+		fclose(fp);
 		return num;
 	}
 	static void writeText(const std::string& filename, const std::string& text) {
-		// todo
+		FILE* fp;
+		throwOnFileError(fopen_s(&fp, filename.c_str(), "wb"));
+
+		auto len = text.size();
+		if(len > 0) {
+			fwrite(text.data(), 1, len, fp);
+		}
+		fclose(fp);
 	}
 	template<typename T, uint N>
 	static void writeBinary(const std::string& filename, const T(&array)[N]) {
-		// todo
+		FILE* fp;
+		throwOnFileError(fopen_s(&fp, filename.c_str(), "wb"));
+
+		fwrite(array, sizeof(N), N, fp);
+
+		fclose(fp);
 	}
 };
 

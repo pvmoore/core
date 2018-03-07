@@ -4,8 +4,8 @@
 static_assert(_WIN64==1, "Expecting to be in 64-bit mode");
 
 /// Target Windows 7 and above          
-#define WINVER		 _WIN32_WINNT_WIN7
-#define _WIN32_WINNT _WIN32_WINNT_WIN7
+#define WINVER			_WIN32_WINNT_WIN7
+#define _WIN32_WINNT	_WIN32_WINNT_WIN7
 #include <SDKDDKVer.h>
 
 #define NOMINMAX	

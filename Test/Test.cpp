@@ -401,6 +401,30 @@ void testFile() {
 		assert(array2[1] == 'I');
 		assert(array2[2] == 'T');
 	}
+	/// File::writeText(string,string)
+	{
+		printf("File::writeText(string,string)\n");
+		auto tmpFilename = File::createTemp();
+		string text = "I am some text";
+		File::writeText(tmpFilename, text);
+		assert(File::size(tmpFilename)==text.size());
+		assert(File::readText(tmpFilename)==text);
+		File::remove(tmpFilename);
+	}
+	/// File::writeBinary(string, [])
+	{
+		printf("File::writeBinary(string,[])\n");
+		auto tmpFilename = File::createTemp();
+		uint data[8] = {1,2,3,4,5,6,7,8};
+		File::writeBinary(tmpFilename, data);
+		assert(File::size(tmpFilename) == _countof(data)*sizeof(uint));
+		uint data2[8];
+		File::readBinary(tmpFilename, data2);
+		for(int i = 0; i < _countof(data); i++) {
+			assert(data2[i] == data[i]);
+		}
+		File::remove(tmpFilename);
+	}
 }
 void testFileReader() {
 	printf("==== Testing filereader.h ====\n");
