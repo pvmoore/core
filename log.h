@@ -6,12 +6,15 @@ class Log {
 	static FILE* fp;
 public:
 	~Log() {
+		close();
+	}
+	static void close() {
 		if(fp) fclose(fp);
 		fp = nullptr;
 	}
 	static void write(const char* fmt, ...) {
 		if(!fp) {
-			if(0 != fopen_s(&fp, "log.log", "w, ccs=UTF-8")) return;
+			if(0 != fopen_s(&fp, "log.log", "w")) return;
 		}
 
 		/// Use this for small strings
@@ -24,9 +27,12 @@ public:
 		vsprintf_s(buf, count, fmt, ap);
 		va_end(ap);
 
-		fwrite(buf, 1, count, fp);
-		fwrite("\n", 1, 1, fp);
-		fflush(fp);
+		if(count > 1) {
+			// Only write if we have more than just "\0"
+			fwrite(buf, 1, count-1, fp);
+			fwrite("\n", 1, 1, fp);
+			fflush(fp);
+		}
 
 		if(buf != text) free(buf);
 	}

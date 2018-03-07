@@ -11,6 +11,7 @@ void testFileWriter();
 void testThreads();
 void testCharBuffer();
 void testString();
+void testLog();
 
 void benchmark();
 
@@ -27,6 +28,7 @@ int wmain(int argc, const wchar_t* argv[]) {
 	testCharBuffer();
 	testFileReader();
 	testFileWriter();
+	testLog();
 
 #else
 	benchmark();
@@ -538,4 +540,20 @@ void testFileWriter() {
 
 	File::remove(tmpFile);
 }
+void testLog() {
+	printf("==== Testing log.h ====\n");
 
+	/// These tests assume nothing has written to the log.log file yet
+
+	string filename = "log.log";
+
+	/// Log::write(const char*,...)
+	{
+		printf("Log::write(const char*,...)\n");
+		Log::write("%s %d", "hello", 7);
+		Log::close();
+		assert(File::size(filename) == 9); 
+		assert(File::readText(filename) == "hello 7\r\n");
+	}
+
+}

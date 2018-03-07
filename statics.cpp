@@ -6,6 +6,8 @@
 
 namespace core {
 
+FILE* Log::fp = nullptr;
 
+Log singletonLog;
 
 } /// core
