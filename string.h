@@ -96,21 +96,26 @@ public:
 		}
 		return std::move(s);
 	}
-	inline static std::string toString(int i) {
-		char buf[64];
-		_itoa_s(i, buf, 10);
-		return std::string(buf);
-	}
-	inline static std::string toString(slong value) {
-		char buf[64];
-		_i64toa_s(value, buf, 64, 10);
-		return std::string(buf);
-	}
 	inline static int toInt(const std::string& s) {
 		return atoi(s.c_str());
 	}
 	inline static float toFloat(const std::string& s) {
 		return (float)atof(s.c_str());
+	}
+	static std::string format(const char* fmt, ...) {
+		char text[256];
+		va_list	ap;
+		std::string str;
+		va_start(ap, fmt);
+		int count = _vscprintf(fmt, ap) + 1;
+		if(count > 1) {
+			char* buf = (count < _countof(text)) ? text : (char*)malloc(count);
+			vsprintf_s(buf, count, fmt, ap);
+			str = buf;
+			if(buf != text) free(buf);
+		}
+		va_end(ap);
+		return std::move(str);
 	}
 };
 

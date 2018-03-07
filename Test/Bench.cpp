@@ -11,11 +11,7 @@ void benchCore();
 void benchCharBuf();
 
 void benchmark() {
-#ifdef _DEBUG
-	printf("============== Not running benchmarks in DEBUG mode\n\n");
-	return;
-#endif
-	printf("============== Running benchmarks\n\n");	
+	printf("Benchmarking...\n\n");	
 
 	benchCharBuf();
 	//benchMemset();

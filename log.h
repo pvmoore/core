@@ -23,18 +23,18 @@ public:
 		va_start(ap, fmt);
 		/// Count number of characters required
 		int count = _vscprintf(fmt, ap) + 1;
-		char* buf = (count < _countof(text)) ? text : (char*)malloc(count);
-		vsprintf_s(buf, count, fmt, ap);
-		va_end(ap);
-
 		if(count > 1) {
 			// Only write if we have more than just "\0"
-			fwrite(buf, 1, count-1, fp);
+			char* buf = (count < _countof(text)) ? text : (char*)malloc(count);
+			vsprintf_s(buf, count, fmt, ap);
+
+			fwrite(buf, 1, count - 1, fp);
 			fwrite("\n", 1, 1, fp);
 			fflush(fp);
-		}
 
-		if(buf != text) free(buf);
+			if(buf != text) free(buf);
+		}
+		va_end(ap);
 	}
 	/// Output debug messages
 	static void dbg(const char* fmt, ...) {
@@ -45,17 +45,17 @@ public:
 
 		va_start(ap, fmt);
 		int count = _vscprintf(fmt, ap) + 1;
-		char* buf = (count < _countof(text)) ? text : (char*)malloc(count);
-		vsprintf_s(buf, count, fmt, ap);
-		va_end(ap);
-
 		if(count > 1) {
 			// Only write if we have more than just "\0"
+			char* buf = (count < _countof(text)) ? text : (char*)malloc(count);
+			vsprintf_s(buf, count, fmt, ap);
+
 			OutputDebugStringA(buf);
 			OutputDebugStringA("\n");
-		}
 
-		if(buf != text) free(buf);
+			if(buf != text) free(buf);
+		}
+		va_end(ap);
 #endif
 	}
 };

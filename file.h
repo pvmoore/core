@@ -63,6 +63,11 @@ public:
 		}
 		return false;
 	}
+	static std::wstring currentDirectory() {
+		wchar_t path[MAX_PATH];
+		GetCurrentDirectory(MAX_PATH, path);
+		return std::wstring(path);
+	}
 	/// Reads an entire text file.
 	template<uint BUFFER_SIZE=4096>
 	static std::string readText(const std::string& filename) {

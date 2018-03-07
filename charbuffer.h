@@ -97,19 +97,20 @@ public:
 		va_start(ap, fmt);	
 		/// Count number of characters required
 		int count  = _vscprintf(fmt, ap) + 1;
-		char* temp = (count < _countof(text)) ? text : (char*)malloc(count);
-		vsprintf_s(temp, count, fmt, ap);
-		va_end(ap);
-
 		if(count > 1) {
 			// we have something worth appending
-			uint len = count-1;
+			char* temp = (count < _countof(text)) ? text : (char*)malloc(count);
+			vsprintf_s(temp, count, fmt, ap);
+
+			uint len = count - 1;
 			inflate(len);
 			memcpy(buf + strLength, temp, len);
 			strLength += len;
 			buf[strLength] = 0;
+
+			if(temp != text) free(temp);
 		}
-		if(temp != text) free(temp);
+		va_end(ap);
 		return *this;
 	}
 	bool contains(const char* str) const {

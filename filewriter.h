@@ -71,18 +71,18 @@ public:
 		va_start(ap, fmt);
 		/// Count number of characters required
 		int count = _vscprintf(fmt, ap) + 1;
-		char* buf = (count < _countof(text)) ? text : (char*)malloc(count);
-		vsprintf_s(buf, count, fmt, ap);
-		va_end(ap);
-
-		/// Only write if we have more than "\0" in our string
 		if(count > 1) {
+			/// Only if we have more than "\0" in our string
+			char* buf = (count < _countof(text)) ? text : (char*)malloc(count);
+			vsprintf_s(buf, count, fmt, ap);
+
 			fwrite(buf, 1, count - 1, fp);
 			fflush(fp);
-			bytesWritten += (count-1);
-		}
+			bytesWritten += (count - 1);
 
-		if(buf != text) free(buf);
+			if(buf != text) free(buf);
+		}
+		va_end(ap);
 		return *this;
 	}
 	void flush() {
