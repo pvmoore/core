@@ -2,7 +2,7 @@
 
 namespace core {
 
-inline void throwOnError(errno_t err) {
+inline void throwOnFileError(errno_t err) {
 	if(err == 0) return;
 	char buf[256];
 	strerror_s(buf, err);
@@ -30,10 +30,10 @@ public:
 	}
 	/// Creates a new file in the user's tmp directory with the given prefix.
 	/// Throws an exception if the file cannot be created.
-	static std::string createTemp(const std::string& prefix) {
+	static std::string createTemp(const std::string& prefix="_tmp") {
 		auto filename = _tempnam(".", prefix.c_str());
 		FILE* f;
-		throwOnError(fopen_s(&f, filename, "a+"));
+		throwOnFileError(fopen_s(&f, filename, "a+"));
 		fclose(f);
 		auto str = std::string(filename);
 		free(filename);
@@ -67,7 +67,7 @@ public:
 	template<uint BUFFER_SIZE=4096>
 	static std::string readText(const std::string& filename) {
 		FILE* f;
-		throwOnError(fopen_s(&f, filename.c_str(), "rb"));
+		throwOnFileError(fopen_s(&f, filename.c_str(), "rb"));
 		
 		auto length = File::size(filename);
 		char buf[BUFFER_SIZE+1];
@@ -91,11 +91,13 @@ public:
 	template<typename T, uint N>
 	static ulong readBinary(const std::string& filename, const T(&array)[N]) {
 		FILE* f;
-		throwOnError(fopen_s(&f, filename.c_str(), "rb"));
+		throwOnFileError(fopen_s(&f, filename.c_str(), "rb"));
 
-		auto length       = File::size(filename);
-		ulong bytesToRead = Math::min<ulong>(length, N);
-		ulong num	      = fread_s((void*)array, N, 1, bytesToRead, f);
+		auto length        = File::size(filename);
+		auto elementSize   = sizeof(T);
+		auto bufferSize    = N * elementSize;
+		auto elementCount  = Math::min<ulong>(length / elementSize, N);
+		auto num	       = fread_s((void*)array, bufferSize, elementSize, elementCount, f);
 
 		fclose(f);
 		return num;

@@ -401,9 +401,9 @@ void testFile() {
 	}
 }
 void testFileReader() {
-	printf("==== Testing file.h (FileReader) ====\n");
+	printf("==== Testing filereader.h ====\n");
 
-	FileReader<128> reader{"../LICENSE"};
+	FileReader<1024> reader{"../LICENSE"};
 	printf("\tOpened file '%s'\n", reader.path.c_str());
 	printf("\tSize = %lld\n", reader.size);
 	assert(!reader.eof());
@@ -420,6 +420,122 @@ void testFileReader() {
 	assert(lines.back()=="SOFTWARE.");
 }
 void testFileWriter() {
-	printf("==== Testing file.h (FileWriter) ====\n");
+	printf("==== Testing filewriter.h ====\n");
+
+	std::string tmpFile = File::createTemp();
+	printf("\tWriting to tmp file '%s'\n", tmpFile.c_str());
+
+	/// writeFmt(const char*,...)
+	{
+		FileWriter w{tmpFile, false};
+		printf("writeFmt(const char*,...)\n");
+		w.writeFmt("%s %d", "Hello", 3);
+		assert(w.bytesWritten == 7);
+	}
+	assert(File::size(tmpFile)==7);
+	assert(File::readText(tmpFile)=="Hello 3");
+
+	/// test appending to existing file
+	{
+		FileWriter w{tmpFile, true};
+		w.writeFmt("%d", 7);
+		assert(w.bytesWritten == 1);
+	}
+	assert(File::size(tmpFile) == 8);
+	assert(File::readText(tmpFile) == "Hello 37");
+
+	/// write(ubyte)
+	{
+		printf("write(ubyte)\n");
+		FileWriter w{tmpFile, false};
+		w.write((ubyte)127);
+		assert(w.bytesWritten == 1);
+	}
+	assert(File::size(tmpFile) == 1);
+	ubyte data[1];
+	File::readBinary(tmpFile, data);
+	assert(data[0]==127);
+
+	/// write(ushort)
+	{
+		printf("write(ushort)\n");
+		FileWriter w{tmpFile, false};
+		w.write((ushort)0xf7a0);
+		assert(w.bytesWritten == 2);
+	}
+	assert(File::size(tmpFile) == 2);
+	ushort data2[1];
+	File::readBinary(tmpFile, data2);
+	assert(data2[0] == 0xf7a0);
+
+	/// write(uint)
+	{
+		printf("write(uint)\n");
+		FileWriter w{tmpFile, false};
+		w.write(0x80010203);
+		assert(w.bytesWritten == 4);
+	}
+	assert(File::size(tmpFile) == 4);
+	uint data3[1];
+	File::readBinary(tmpFile, data3);
+	assert(data3[0] == 0x80010203);
+
+	/// write(ulong)
+	{
+		printf("write(ulong)\n");
+		FileWriter w{tmpFile, false};
+		w.write(0x80010203'fa00ee44);
+		assert(w.bytesWritten == 8);
+	}
+	assert(File::size(tmpFile) == 8);
+	ulong data4[1];
+	File::readBinary(tmpFile, data4);
+	assert(data4[0] == 0x80010203'fa00ee44);
+
+	/// write(float)
+	{
+		printf("write(float)\n");
+		FileWriter w{tmpFile, false};
+		w.write(3.3f);
+		assert(w.bytesWritten == 4);
+	}
+	assert(File::size(tmpFile) == 4);
+	float data5[1];
+	File::readBinary(tmpFile, data5);
+	assert(data5[0] == 3.3f);
+
+	/// write(double)
+	{
+		printf("write(double)\n");
+		FileWriter w{tmpFile, false};
+		w.write(3.7);
+		assert(w.bytesWritten == 8);
+	}
+	assert(File::size(tmpFile) == 8);
+	double data6[1];
+	File::readBinary(tmpFile, data6);
+	assert(data6[0] == 3.7);
+
+	/// write(const char*)
+	{
+		printf("write(const char*)\n");
+		FileWriter w{tmpFile, false};
+		w.write("hello");
+		assert(w.bytesWritten == 5);
+	}
+	assert(File::size(tmpFile) == 5);
+	assert(File::readText(tmpFile) == "hello");
+
+	/// write(const string)
+	{
+		printf("write(const string)\n");
+		FileWriter w{tmpFile, false};
+		w.write(string("hello"));
+		assert(w.bytesWritten == 5);
+	}
+	assert(File::size(tmpFile) == 5);
+	assert(File::readText(tmpFile) == "hello");
+
+	File::remove(tmpFile);
 }
 

@@ -9,13 +9,13 @@ class FileReader {
 	int bufferPos = 0;
 	slong currentPos = 0;
 	slong filePos = 0;
-	//static_assert(BUFFER_SIZE>=1024);
+	static_assert(BUFFER_SIZE>=1024);
 public:
 	const std::string path;
 	slong size = -1;
 
 	FileReader(const std::string& path) : path(path) {
-		throwOnError(fopen_s(&fp, path.c_str(), "rb"));
+		throwOnFileError(fopen_s(&fp, path.c_str(), "rb"));
 		size = File::size(path);
 	}
 	~FileReader() {
@@ -26,6 +26,24 @@ public:
 	}
 	bool eof() const {
 		return currentPos >= size;
+	}
+	ubyte readByte() {
+		throw std::runtime_error("implement me");
+	}
+	short readShort() {
+		throw std::runtime_error("implement me");
+	}
+	int readInt() {
+		throw std::runtime_error("implement me");
+	}
+	slong readLong() {
+		throw std::runtime_error("implement me");
+	}
+	float readFloat() {
+		throw std::runtime_error("implement me");
+	}
+	double readDouble() {
+		throw std::runtime_error("implement me");
 	}
 	/// Assumes /n (UNIX) or /r/n (Windows) line endings.
 	std::string readLine() {
@@ -76,14 +94,9 @@ public:
 private:
 	void fillBuffer() {
 		slong len = Math::min<slong>(BUFFER_SIZE, size - filePos);
-		//printf("fillBuffer()\n");
-		//printf("\treading %lld bytes into buffer\n", len);
-
-		auto num = fread((void*)buffer, 1, len, fp);
+		auto num  = fread((void*)buffer, 1, len, fp);
 		bufferPos = 0;
 		filePos += num;
-		//printf("\tfread %llu bytes\n", num);
-		//printf("\tfilePos is now %lld\n", filePos);
 	}
 };
 

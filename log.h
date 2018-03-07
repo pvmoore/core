@@ -24,7 +24,7 @@ public:
 		vsprintf_s(buf, count, fmt, ap);
 		va_end(ap);
 
-		fwrite(buf, 1, strlen(buf), fp);
+		fwrite(buf, 1, count, fp);
 		fwrite("\n", 1, 1, fp);
 		fflush(fp);
 
