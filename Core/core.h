@@ -14,10 +14,10 @@ namespace core {
 }
 
 #include "types.h"
-#include "log.h"
 #include "math.h" 
 #include "string.h"
 #include "wstring.h"
+#include "log.h"
 #include "charbuffer.h"
 #include "file.h"
 #include "filereader.h"

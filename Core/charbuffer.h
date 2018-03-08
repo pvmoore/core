@@ -29,6 +29,7 @@ public:
 	bool empty() const { return length()==0; }
 
 	const char* c_str() const { if(buf) return buf; else return ""; }
+	std::string std_str() const { return strLength==0 ? "" : std::string(buf, strLength); }
 	void clear() { if(buf) buf[0] = 0; strLength = 0; }
 	void pack() { 
 		if(!buf) return;
@@ -77,6 +78,7 @@ public:
 			uint len = (uint)str.size();
 			inflate(len);
 			memcpy(buf+strLength, str.c_str(), len);
+
 			strLength += len;
 			buf[strLength] = 0;
 		}

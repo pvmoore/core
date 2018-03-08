@@ -10,12 +10,21 @@ namespace UnitTests {
 
 TEST_CLASS(log) {
 public:
-	TEST_METHOD(write_char_ptr_ellipsis) {
+	TEST_METHOD(format) {
+		Log::close();
 		string filename = "log.log";
-		Log::write("%s %d", "hello", 7);
+		Log::format("%s %d", "hello", 7);
 		Log::close();
 		Assert::IsTrue(File::size(filename) == 9);
 		Assert::IsTrue(File::readText(filename) == "hello 7\r\n");
+	}
+	TEST_METHOD(write) {
+		Log::close();
+		string filename = "log.log";
+		Log::write("The num is ", 13, " + ", 2.0f);
+		Log::close();
+		Assert::IsTrue(File::size(filename) == 21);
+		Assert::AreEqual(File::readText(filename).c_str(), "The num is 13 + 2.0\r\n");
 	}
 	TEST_METHOD(dbg) {
 		Log::dbg("hello");
