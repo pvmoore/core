@@ -24,7 +24,8 @@ static_assert(_WIN64==1, "Expecting to be in 64-bit mode");
 #include <windows.h>
 
 //#include <stdio.h>
-//#include <stdlib.h>
+#include <stdlib.h>
+#include <stdarg.h>
 #include <assert.h>
 #include <intrin.h>
 

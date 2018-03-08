@@ -1,5 +1,9 @@
 #pragma once
 
+#include <stdlib.h>
+#include <stdarg.h>
+#include <Windows.h>
+
 namespace core {
 
 class Log {
