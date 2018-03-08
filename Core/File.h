@@ -80,7 +80,7 @@ public:
 		result.reserve(length);
 
 		while(length>0) {
-			ulong bytes = Math::min<ulong>(length, BUFFER_SIZE);
+			ulong bytes = std::min<ulong>(length, BUFFER_SIZE);
 			ulong num   = fread_s(buf, BUFFER_SIZE, 1, bytes, f);
 			length -= num;
 
@@ -101,7 +101,7 @@ public:
 		auto length        = File::size(filename);
 		auto elementSize   = sizeof(T);
 		auto bufferSize    = N * elementSize;
-		auto elementCount  = Math::min<ulong>(length / elementSize, N);
+		auto elementCount  = std::min<ulong>(length / elementSize, N);
 		auto num	       = fread_s((void*)array, bufferSize, elementSize, elementCount, fp);
 
 		fclose(fp);

@@ -93,7 +93,7 @@ public:
 	}
 private:
 	void fillBuffer() {
-		slong len = Math::min<slong>(BUFFER_SIZE, size - filePos);
+		slong len = std::min<slong>(BUFFER_SIZE, size - filePos);
 		auto num  = fread((void*)buffer, 1, len, fp);
 		bufferPos = 0;
 		filePos += num;
