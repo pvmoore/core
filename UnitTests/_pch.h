@@ -22,17 +22,16 @@ static_assert(_WIN64 == 1, "Expecting to be in 64-bit mode");
 #define NOHELP	
 #define WIN32_LEAN_AND_MEAN 
 #include <windows.h>
-
-#include <process.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <tchar.h>
 #include <crtdbg.h>
-#include <assert.h>
+#include <process.h>
+
+#define _ALLOW_RTCc_IN_STL
+#include <cstddef>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
 
 /// std namespace files
-#define _ALLOW_RTCc_IN_STL
 #include <memory>
 #include <vector>
 #include <chrono>
