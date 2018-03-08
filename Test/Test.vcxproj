@@ -108,7 +108,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <SmallerTypeCheck>true</SmallerTypeCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -118,6 +118,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeaderFile>_pch.h</PrecompiledHeaderFile>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -193,7 +194,7 @@
     <ClInclude Include="_pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core.vcxproj">
+    <ProjectReference Include="..\Core\Core.vcxproj">
       <Project>{6d429a4d-d1a2-48d9-b887-55f71d5dc6e1}</Project>
     </ProjectReference>
   </ItemGroup>

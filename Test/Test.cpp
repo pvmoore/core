@@ -1,5 +1,5 @@
 #include "_pch.h"
-#include "../core.h"
+#include "../Core/core.h"
 
 using namespace core;
 using std::string;

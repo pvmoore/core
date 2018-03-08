@@ -1,5 +1,5 @@
 #include "_pch.h"
-#include "../core.h"
+#include "../Core/core.h"
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

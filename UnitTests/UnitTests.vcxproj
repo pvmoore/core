@@ -99,11 +99,13 @@
       <UseFullPaths>true</UseFullPaths>
       <PrecompiledHeaderFile>_pch.h</PrecompiledHeaderFile>
       <StringPooling>true</StringPooling>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <AdditionalOptions>/execution-charset:.1252 /source-charset:.1252 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -188,7 +190,7 @@
     <ClCompile Include="test_thread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core.vcxproj">
+    <ProjectReference Include="..\Core\Core.vcxproj">
       <Project>{6d429a4d-d1a2-48d9-b887-55f71d5dc6e1}</Project>
     </ProjectReference>
   </ItemGroup>
