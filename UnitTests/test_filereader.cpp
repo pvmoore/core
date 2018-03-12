@@ -12,12 +12,12 @@ namespace UnitTests {
 TEST_CLASS(filereader) {
 public:
 	TEST_METHOD(Constructor) {
-		FileReader<1024> reader{"../../LICENSE"};
+		FileReader<1024> reader{L"../../LICENSE"};
 		Assert::IsFalse(reader.eof());
 		Assert::IsTrue(reader.size == 1089);
 	}
 	TEST_METHOD(readLine) {
-		FileReader<1024> reader{"../../LICENSE"};
+		FileReader<1024> reader{L"../../LICENSE"};
 		vector<string> lines;
 		while(!reader.eof()) {
 			lines.push_back(reader.readLine());

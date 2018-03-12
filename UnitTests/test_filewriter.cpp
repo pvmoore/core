@@ -5,18 +5,19 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace core;
 using std::string;
+using std::wstring;
 
 namespace UnitTests {
 
 TEST_CLASS(filewriter) {
 public:
-	static string tmpFile;
+	static wstring tmpFile;
 	TEST_CLASS_INITIALIZE(ClassInitialize) {
 		tmpFile = File::createTemp();
-		Logger::WriteMessage(("Creating tmp file '%s'" + tmpFile).c_str());
+		Logger::WriteMessage((L"Creating tmp file '%s'" + tmpFile).c_str());
 	}
 	TEST_CLASS_CLEANUP(ClassCleanup) {
-		Logger::WriteMessage(("removing " + tmpFile).c_str());
+		Logger::WriteMessage((L"removing " + tmpFile).c_str());
 		File::remove(tmpFile);
 	}
 
@@ -131,6 +132,6 @@ public:
 	}
 };
 
-string filewriter::tmpFile;
+wstring filewriter::tmpFile;
 
 }

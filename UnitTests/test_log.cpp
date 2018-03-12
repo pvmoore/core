@@ -5,6 +5,7 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace core;
 using std::string;
+using std::wstring;
 
 namespace UnitTests {
 
@@ -12,7 +13,7 @@ TEST_CLASS(log) {
 public:
 	TEST_METHOD(format) {
 		Log::close();
-		string filename = "log.log";
+		wstring filename = L"log.log";
 		Log::format("%s %d", "hello", 7);
 		Log::close();
 		Assert::IsTrue(File::size(filename) == 9);
@@ -20,7 +21,7 @@ public:
 	}
 	TEST_METHOD(write) {
 		Log::close();
-		string filename = "log.log";
+		wstring filename = L"log.log";
 		Log::write("The num is ", 13, " + ", 2.0f);
 		Log::close();
 		Assert::IsTrue(File::size(filename) == 21);

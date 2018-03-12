@@ -5,12 +5,12 @@ namespace core {
 class FileWriter {
 	FILE* fp = nullptr;
 public:
-	std::string path;
+	std::wstring path;
 	ulong bytesWritten = 0;
 
-	FileWriter(const std::string& path, bool append=false) : path(path) {
-		auto mode = append ? "a" : "w";
-		throwOnFileError(fopen_s(&fp, path.c_str(), mode));
+	FileWriter(const std::wstring& path, bool append=false) : path(path) {
+		auto mode = append ? L"a" : L"w";
+		throwOnFileError(_wfopen_s(&fp, path.c_str(), mode));
 	}
 	~FileWriter() {
 		if(fp) {

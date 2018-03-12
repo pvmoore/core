@@ -14,11 +14,11 @@ class FileReader {
 	slong filePos = 0;
 	static_assert(BUFFER_SIZE>=1024);
 public:
-	const std::string path;
+	const std::wstring path;
 	slong size = -1;
 
-	FileReader(const std::string& path) : path(path) {
-		throwOnFileError(fopen_s(&fp, path.c_str(), "rb"));
+	FileReader(const std::wstring& path) : path(path) {
+		throwOnFileError(_wfopen_s(&fp, path.c_str(), L"rb"));
 		size = File::size(path);
 	}
 	~FileReader() {

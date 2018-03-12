@@ -67,7 +67,7 @@ public:
 private:
 	static void writeChars(const char* chars, ulong count) {
 		if(!fp) {
-			if(0 != fopen_s(&fp, "log.log", "w")) return;
+			if(0 != _wfopen_s(&fp, L"log.log", L"w")) return;
 		}
 		fwrite(chars, 1, count, fp);
 		fwrite("\n", 1, 1, fp);

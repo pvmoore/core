@@ -5,68 +5,69 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace core;
 using std::string;
+using std::wstring;
 
 namespace UnitTests {
 
 TEST_CLASS(file) {
 public:
 	TEST_METHOD(exists) {
-		Assert::IsTrue(File::exists("../../LICENSE"));
+		Assert::IsTrue(File::exists(L"../../LICENSE"));
 	}
 	TEST_METHOD(size) {
-		Assert::IsTrue(File::size("../../LICENSE") == 1089);
+		Assert::IsTrue(File::size(L"../../LICENSE") == 1089);
 	}
 	TEST_METHOD(createTemp) {
-		string filename = File::createTemp("_temp");
+		wstring filename = File::createTemp(L"_temp");
 		Assert::IsTrue(File::exists(filename));
 		Logger::WriteMessage(String::format("File::createTemp -> Created temp file '%s'\n", filename.c_str()).c_str());
 		File::remove(filename);
 	}
 	TEST_METHOD(rename) {
-		string filename = File::createTemp("_temp");
+		wstring filename = File::createTemp(L"_temp");
 		Assert::IsTrue(File::exists(filename));
-		string filename2 = filename + "2";
+		wstring filename2 = filename + L"2";
 		File::rename(filename, filename2);
 		Assert::IsFalse(File::exists(filename));
 		Assert::IsTrue(File::exists(filename2));
 		File::remove(filename2);
 	}
 	TEST_METHOD(remove) {
-		string filename = File::createTemp("_temp");
+		wstring filename = File::createTemp(L"_temp");
 		Assert::IsTrue(File::exists(filename));
 		File::remove(filename);
 		Assert::IsFalse(File::exists(filename));
 	}
 	TEST_METHOD(isDirectory) {
-		Assert::IsTrue(File::isDirectory("../Debug"));
-		Assert::IsTrue(File::isDirectory("."));
-		Assert::IsTrue(File::isDirectory(".."));
+		Assert::IsTrue(File::isDirectory(L"../Debug"));
+		Assert::IsTrue(File::isDirectory(L"."));
+		Assert::IsTrue(File::isDirectory(L".."));
 
-		Assert::IsFalse(File::isDirectory("_pch.h"));
-		Assert::IsFalse(File::isDirectory(""));
+		Assert::IsFalse(File::isDirectory(L"_pch.h"));
+		Assert::IsFalse(File::isDirectory(L""));
 	}
 	TEST_METHOD(isFile) {
-		Assert::IsTrue(File::isFile("../../LICENSE"));
+		Assert::IsTrue(File::isFile(L"../../LICENSE"));
 
-		Assert::IsFalse(File::isFile("../Debug"));
-		Assert::IsFalse(File::isFile("."));
+		Assert::IsFalse(File::isFile(L"../Debug"));
+		Assert::IsFalse(File::isFile(L"."));
 	}
 	TEST_METHOD(readText) {
-		auto text = File::readText("../../LICENSE");
+		auto text = File::readText(L"../../LICENSE");
 		Assert::IsTrue(text.size() == 1089);
 		Assert::IsTrue(text.find("MIT License") == 0);
 		Assert::IsTrue(text.find("SOFTWARE.") == 1089 - 11); // assumes it ends in \r\n
 	}
 	TEST_METHOD(readBinary) {
 		char array[1089];
-		auto num = File::readBinary("../../LICENSE", array);
+		auto num = File::readBinary(L"../../LICENSE", array);
 		Assert::IsTrue(num == 1089);
 		Assert::IsTrue(array[0] == 'M');
 		Assert::IsTrue(array[1] == 'I');
 		Assert::IsTrue(array[2] == 'T');
 
 		char array2[16];
-		auto num2 = File::readBinary("../../LICENSE", array2);
+		auto num2 = File::readBinary(L"../../LICENSE", array2);
 		Assert::IsTrue(num2 == 16);
 		Assert::IsTrue(array2[0] == 'M');
 		Assert::IsTrue(array2[1] == 'I');
