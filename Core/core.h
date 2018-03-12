@@ -14,6 +14,7 @@ namespace core {
 }
 
 #include "types.h"
+#include "win.h"
 #include "math.h" 
 #include "string.h"
 #include "wstring.h"
