@@ -1,5 +1,8 @@
 #pragma once
 
+#include "_defines.h"
+#include <algorithm>
+
 namespace core {
 
 template<int BUFFER_SIZE = 4096>

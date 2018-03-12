@@ -84,10 +84,16 @@ private:
 	template<> static std::string parseArg<const char*>(const char* str) {
 		return str;
 	}
+	template<> static std::string parseArg<char*>(char* str) {
+		return str;
+	}
 	template<> static std::string parseArg<std::string>(const std::string str) {
 		return str;
 	}
 	template<> static std::string parseArg<int>(int value) {
+		return String::format("%d", value);
+	}
+	template<> static std::string parseArg<long>(long value) {
 		return String::format("%d", value);
 	}
 	template<> static std::string parseArg<uint>(uint value) {
