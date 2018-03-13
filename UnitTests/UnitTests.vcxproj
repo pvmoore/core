@@ -185,6 +185,7 @@
     <ClCompile Include="test_charbuffer.cpp" />
     <ClCompile Include="test_filereader.cpp" />
     <ClCompile Include="test_filewriter.cpp" />
+    <ClCompile Include="test_fun.cpp" />
     <ClCompile Include="test_log.cpp" />
     <ClCompile Include="test_math.cpp" />
     <ClCompile Include="test_string.cpp" />

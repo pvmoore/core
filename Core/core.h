@@ -13,6 +13,7 @@ namespace core {
 	//__thread const char* errorMessage;
 }
 
+#include "fun.h"
 #include "types.h"
 #include "win.h"
 #include "math.h" 
