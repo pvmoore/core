@@ -26,9 +26,6 @@
     <ClInclude Include="semaphore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="wstring.h">
       <Filter>Header Files</Filter>
     </ClInclude>

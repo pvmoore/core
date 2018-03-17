@@ -16,7 +16,6 @@ namespace core {
 #include "fun.h"
 #include "types.h"
 #include "win.h"
-#include "math.h" 
 #include "string.h"
 #include "wstring.h"
 #include "log.h"

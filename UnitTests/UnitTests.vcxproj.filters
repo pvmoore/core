@@ -40,9 +40,6 @@
     <ClCompile Include="test_string.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test_math.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="test_fun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
