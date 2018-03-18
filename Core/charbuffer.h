@@ -73,6 +73,12 @@ public:
 	/// Read-only access to chars
 	const char operator[](uint index) const { return buf[index]; }
 
+    CharBuffer& append(char c) {
+        inflate(1);
+        buf[strLength++] = c;
+        buf[strLength]   = 0;
+        return *this;
+    }
 	CharBuffer& append(const std::string& str) {
 		if(!str.empty()) {
 			uint len = (uint)str.size();

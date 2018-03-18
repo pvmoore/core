@@ -64,6 +64,12 @@ public:
 		CharBuffer c{"hello"};
 		Assert::IsTrue(c[0] == 'h');
 	}
+    TEST_METHOD(append_char) {
+        CharBuffer c{};
+        c.append('a');
+        Assert::IsTrue(!c.empty() && c.length()==1 && c[0]=='a');
+        Assert::IsTrue(c[1] == 0);
+    }
 	TEST_METHOD(append_string) {
 		CharBuffer c{};
 		c.append(string("hello"))
