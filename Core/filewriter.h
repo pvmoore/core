@@ -10,7 +10,7 @@ public:
 
 	FileWriter(const std::wstring& path, bool append=false) : path(path) {
 		auto mode = append ? L"a" : L"w";
-		throwOnFileError(_wfopen_s(&fp, path.c_str(), mode));
+		throwOnFileError(_wfopen_s(&fp, path.c_str(), mode), path);
 	}
 	~FileWriter() {
 		if(fp) {

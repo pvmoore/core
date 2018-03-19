@@ -18,7 +18,7 @@ public:
 	slong size = -1;
 
 	FileReader(const std::wstring& path) : path(path) {
-		throwOnFileError(_wfopen_s(&fp, path.c_str(), L"rb"));
+		throwOnFileError(_wfopen_s(&fp, path.c_str(), L"rb"), path);
 		size = File::size(path);
 	}
 	~FileReader() {

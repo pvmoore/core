@@ -2,11 +2,13 @@
 
 namespace core {
 
-inline void throwOnFileError(errno_t err) {
+inline void throwOnFileError(errno_t err, const wstring& filename) {
 	if(err == 0) return;
 	char buf[256];
 	strerror_s(buf, err);
-	throw std::runtime_error("File error: " + std::string(buf));
+
+    std::string msg = String::format("File error (%s): %s", WString::toString(filename).c_str(), buf);
+	throw std::runtime_error(msg);
 }
 
 class File {
@@ -33,7 +35,7 @@ public:
 	static std::wstring createTemp(const std::wstring& prefix=L"_tmp") {
 		auto filename = _wtempnam(L".", prefix.c_str());
 		FILE* f;
-		throwOnFileError(_wfopen_s(&f, filename, L"a+"));
+		throwOnFileError(_wfopen_s(&f, filename, L"a+"), filename);
 		fclose(f);
 		auto str = std::wstring(filename);
 		free(filename);
@@ -109,7 +111,7 @@ public:
 	}
 	static void writeText(const std::wstring& filename, const std::string& text) {
 		FILE* fp;
-		throwOnFileError(_wfopen_s(&fp, filename.c_str(), L"wb"));
+		throwOnFileError(_wfopen_s(&fp, filename.c_str(), L"wb"), filename);
 
 		auto len = text.size();
 		if(len > 0) {
