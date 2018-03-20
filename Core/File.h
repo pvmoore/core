@@ -2,7 +2,7 @@
 
 namespace core {
 
-inline void throwOnFileError(errno_t err, const wstring& filename) {
+inline void throwOnFileError(errno_t err, const std::wstring& filename) {
 	if(err == 0) return;
 	char buf[256];
 	strerror_s(buf, err);
