@@ -22,7 +22,7 @@ public:
 	TEST_METHOD(write) {
 		Log::close();
 		wstring filename = L"log.log";
-		Log::write("The num is ", 13, " + ", 2.0f);
+		Log::write("The num is ", 13, " + ", 2.0f, (const char*)nullptr);
 		Log::close();
 		Assert::IsTrue(File::size(filename) == 21);
 		Assert::AreEqual(File::readText(filename).c_str(), "The num is 13 + 2.0\r\n");

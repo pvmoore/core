@@ -82,10 +82,12 @@ private:
 	};
 	/// Specialized versions of parse
 	template<> static std::string parseArg<const char*>(const char* str) {
-		return str;
+        /// Handle null case
+		return str ? str : std::string();
 	}
 	template<> static std::string parseArg<char*>(char* str) {
-		return str;
+        /// Handle null case
+        return str ? str : std::string();
 	}
 	template<> static std::string parseArg<std::string>(const std::string str) {
 		return str;

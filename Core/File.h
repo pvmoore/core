@@ -74,7 +74,7 @@ public:
 	template<uint BUFFER_SIZE=4096>
 	static std::string readText(const std::wstring& filename) {
 		FILE* f;
-		throwOnFileError(_wfopen_s(&f, filename.c_str(), L"rb"));
+		throwOnFileError(_wfopen_s(&f, filename.c_str(), L"rb"), filename);
 		
 		auto length = File::size(filename);
 		char buf[BUFFER_SIZE+1];
@@ -98,7 +98,7 @@ public:
 	template<typename T, uint N>
 	static ulong readBinary(const std::wstring& filename, const T(&array)[N]) {
 		FILE* fp;
-		throwOnFileError(_wfopen_s(&fp, filename.c_str(), L"rb"));
+		throwOnFileError(_wfopen_s(&fp, filename.c_str(), L"rb"), filename);
 
 		auto length        = File::size(filename);
 		auto elementSize   = sizeof(T);
@@ -122,7 +122,7 @@ public:
 	template<typename T, uint N>
 	static void writeBinary(const std::wstring& filename, const T(&array)[N]) {
 		FILE* fp;
-		throwOnFileError(_wfopen_s(&fp, filename.c_str(), L"wb"));
+		throwOnFileError(_wfopen_s(&fp, filename.c_str(), L"wb"), filename);
 
 		fwrite(array, sizeof(N), N, fp);
 
