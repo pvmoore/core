@@ -58,21 +58,6 @@ public:
 		Assert::IsTrue(text.find("MIT License") == 0);
 		Assert::IsTrue(text.find("SOFTWARE.") == 1089 - 11); // assumes it ends in \r\n
 	}
-	TEST_METHOD(readBinary) {
-		char array[1089];
-		auto num = File::readBinary(L"../../LICENSE", array);
-		Assert::IsTrue(num == 1089);
-		Assert::IsTrue(array[0] == 'M');
-		Assert::IsTrue(array[1] == 'I');
-		Assert::IsTrue(array[2] == 'T');
-
-		char array2[16];
-		auto num2 = File::readBinary(L"../../LICENSE", array2);
-		Assert::IsTrue(num2 == 16);
-		Assert::IsTrue(array2[0] == 'M');
-		Assert::IsTrue(array2[1] == 'I');
-		Assert::IsTrue(array2[2] == 'T');
-	}
 	TEST_METHOD(writeText) {
 		auto tmpFilename = File::createTemp();
 		string text = "I am some text";
@@ -81,7 +66,22 @@ public:
 		Assert::IsTrue(File::readText(tmpFilename) == text);
 		File::remove(tmpFilename);
 	}
-	TEST_METHOD(writeBinary) {
+    TEST_METHOD(readBinary_static_array) {
+        char array[1089];
+        auto num = File::readBinary(L"../../LICENSE", array);
+        Assert::IsTrue(num == 1089);
+        Assert::IsTrue(array[0] == 'M');
+        Assert::IsTrue(array[1] == 'I');
+        Assert::IsTrue(array[2] == 'T');
+
+        char array2[16];
+        auto num2 = File::readBinary(L"../../LICENSE", array2);
+        Assert::IsTrue(num2 == 16);
+        Assert::IsTrue(array2[0] == 'M');
+        Assert::IsTrue(array2[1] == 'I');
+        Assert::IsTrue(array2[2] == 'T');
+    }
+	TEST_METHOD(writeBinary_static_array) {
 		auto tmpFilename = File::createTemp();
 		uint data[8] = {1, 2, 3, 4, 5, 6, 7, 8};
 		File::writeBinary(tmpFilename, data);
@@ -93,6 +93,26 @@ public:
 		}
 		File::remove(tmpFilename);
 	}
+    TEST_METHOD(read_write_binary_dynamic_array) {
+        auto tmpFilename = File::createTemp();
+        const uint N = 10;
+        uint* data = new uint[N];
+        for(int i=0; i<N; i++) { data[i] = i; }
+
+        /// writeBinary (dynamic)
+        File::writeBinary(tmpFilename, data, N);
+        Assert::IsTrue(File::size(tmpFilename) == N * sizeof(uint));
+
+        /// readBinary (dynamic)
+        uint* data2 = new uint[N];
+        File::readBinary(tmpFilename, data2, N);
+        for(int i = 0; i < N; i++) {
+            Assert::IsTrue(data2[i] == data[i]);
+        }
+        delete[] data;
+        delete[] data2;
+        File::remove(tmpFilename);
+    }
 	TEST_METHOD(currentDirectory) {
 		auto dirw = File::currentDirectory();
 		auto dir  = WString::toString(dirw);

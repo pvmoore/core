@@ -92,23 +92,6 @@ public:
 		fclose(f);
 		return std::move(result) ;
 	}
-	/// Reads an entire binary file into _array_.
-	/// Returns the number of bytes read.
-	/// Assumes you already know the file size or only want a part of the file.
-	template<typename T, uint N>
-	static ulong readBinary(const std::wstring& filename, const T(&array)[N]) {
-		FILE* fp;
-		throwOnFileError(_wfopen_s(&fp, filename.c_str(), L"rb"), filename);
-
-		auto length        = File::size(filename);
-		auto elementSize   = sizeof(T);
-		auto bufferSize    = N * elementSize;
-		auto elementCount  = std::min<ulong>(length / elementSize, N);
-		auto num	       = fread_s((void*)array, bufferSize, elementSize, elementCount, fp);
-
-		fclose(fp);
-		return num;
-	}
 	static void writeText(const std::wstring& filename, const std::string& text) {
 		FILE* fp;
 		throwOnFileError(_wfopen_s(&fp, filename.c_str(), L"wb"), filename);
@@ -119,15 +102,55 @@ public:
 		}
 		fclose(fp);
 	}
+    /// Reads an entire binary file into _array_.
+    /// Returns the number of bytes read.
+    /// Assumes you already know the file size or only want a part of the file.
+    template<typename T, uint N>
+    static ulong readBinary(const std::wstring& filename, const T(&array)[N]) {
+        FILE* fp;
+        throwOnFileError(_wfopen_s(&fp, filename.c_str(), L"rb"), filename);
+
+        auto length       = File::size(filename);
+        auto elementSize  = sizeof(T);
+        auto bufferSize   = N * elementSize;
+        auto elementCount = std::min<ulong>(length / elementSize, N);
+        auto num = fread_s((void*)array, bufferSize, elementSize, elementCount, fp);
+
+        fclose(fp);
+        return num;
+    }
+    template<typename T>
+    static ulong readBinary(const std::wstring& filename, const T* array, ulong numElements) {
+        FILE* fp;
+        throwOnFileError(_wfopen_s(&fp, filename.c_str(), L"rb"), filename);
+
+        auto length       = File::size(filename);
+        auto elementSize  = sizeof(T);
+        auto bufferSize   = numElements * elementSize;
+        auto elementCount = std::min<ulong>(length / elementSize, numElements);
+        auto num = fread_s((void*)array, bufferSize, elementSize, elementCount, fp);
+
+        fclose(fp);
+        return num;
+    }
 	template<typename T, uint N>
 	static void writeBinary(const std::wstring& filename, const T(&array)[N]) {
 		FILE* fp;
 		throwOnFileError(_wfopen_s(&fp, filename.c_str(), L"wb"), filename);
 
-		fwrite(array, sizeof(N), N, fp);
+		fwrite(array, sizeof(T), N, fp);
 
 		fclose(fp);
 	}
+    template<typename T>
+    static void writeBinary(const std::wstring& filename, const T* array, ulong numElements) {
+        FILE* fp;
+        throwOnFileError(_wfopen_s(&fp, filename.c_str(), L"wb"), filename);
+
+        fwrite(array, sizeof(T), numElements, fp);
+
+        fclose(fp);
+    }
 };
 
 } /// core
