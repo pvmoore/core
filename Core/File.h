@@ -103,7 +103,7 @@ public:
 		fclose(fp);
 	}
     /// Reads an entire binary file into _array_.
-    /// Returns the number of bytes read.
+    /// Returns the number of elements read.
     /// Assumes you already know the file size or only want a part of the file.
     template<typename T, uint N>
     static ulong readBinary(const std::wstring& filename, const T(&array)[N]) {
@@ -119,6 +119,8 @@ public:
         fclose(fp);
         return num;
     }
+    /// Reads _numElements_ elements into _array_.
+    /// Returns the number of elements read.
     template<typename T>
     static ulong readBinary(const std::wstring& filename, const T* array, ulong numElements) {
         FILE* fp;
