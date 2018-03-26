@@ -76,48 +76,33 @@ private:
 	///==============================================================================
 	/// Templates for implementing _write_
 	///==============================================================================
-	template<class T>
-	static std::string parseArg(T t) {
-		static_assert(false, "core::Log::write -> Unhandled type");
-	};
-	/// Specialized versions of parse
-	template<> static std::string parseArg<const char*>(const char* str) {
+    static std::string parseArg(const char* str) {
         /// Handle null case
-		return str ? str : std::string();
-	}
-	template<> static std::string parseArg<char*>(char* str) {
-        /// Handle null case
-        return str ? str : std::string();
-	}
-	template<> static std::string parseArg<std::string>(const std::string str) {
-		return str;
-	}
-	template<> static std::string parseArg<int>(int value) {
-		return String::format("%d", value);
-	}
-	template<> static std::string parseArg<long>(long value) {
-		return String::format("%d", value);
-	}
-	template<> static std::string parseArg<uint>(uint value) {
-		return String::format("%u", value);
-	}
-	template<> static std::string parseArg<slong>(slong value) {
-		return String::format("%lld", value);
-	}
-	template<> static std::string parseArg<ulong>(ulong value) {
-		return String::format("%llu", value);
-	}
-	template<> static std::string parseArg<float>(float value) {
-		return parseArg<double>(std::forward<double>((double)value));
-	}
-	template<> static std::string parseArg<double>(double value) {
-		auto s = String::format("%f", value);
-		/// Remove extra trailing zeroes.
-		while(s.size()>3 && s[s.size() - 1] == '0' && s[s.size() - 2] != '.') {
-			s.erase(s.size() - 1);
-		}
-		return std::move(s);
-	}
+    	return str ? str : std::string();
+    }
+    static std::string parseArg(const std::string& str) {
+        return str;
+    }
+    static std::string parseArg(int value) {
+    	return String::format("%d", value);
+    }
+    static std::string parseArg(uint value) {
+    	return String::format("%u", value);
+    }
+    static std::string parseArg(ulong value) {
+    	return String::format("%llu", value);
+    }
+    static std::string parseArg(slong value) {
+    	return String::format("%lld", value);
+    }
+    static std::string parseArg(double value) {
+        auto s = String::format("%f", value);
+        /// Remove extra trailing zeroes.
+        while(s.size()>3 && s[s.size() - 1] == '0' && s[s.size() - 2] != '.') {
+        	s.erase(s.size() - 1);
+        }
+        return std::move(s);
+    }
 
 	template <typename T>
 	static std::string writeArgs(T t) {

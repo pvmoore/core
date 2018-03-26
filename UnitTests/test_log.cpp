@@ -22,10 +22,21 @@ public:
 	TEST_METHOD(write) {
 		Log::close();
 		wstring filename = L"log.log";
-		Log::write("The num is ", 13, " + ", 2.0f, (const char*)nullptr);
+		Log::write("The num is ", 
+                   13,                          // int
+                   (uint)14,                    // uint
+                   " + ",                       // const char*
+                   2.0f,                        // float
+                   3.14,                        // double
+                   (const char*)nullptr,        // nullptr
+                   string("oo"),                // std::string
+                   (unsigned char)3,            // ubyte
+                   (short)70,                   // signed short
+                   (char*)"..."                 // char*
+        );
 		Log::close();
-		Assert::IsTrue(File::size(filename) == 21);
-		Assert::AreEqual(File::readText(filename).c_str(), "The num is 13 + 2.0\r\n");
+		Assert::IsTrue(File::size(filename) == 35);
+		Assert::AreEqual(File::readText(filename).c_str(), "The num is 1314 + 2.03.14oo370...\r\n");
 	}
 	TEST_METHOD(dbg) {
 		Log::dbg("hello");
