@@ -32,11 +32,12 @@ public:
                    string("oo"),                // std::string
                    (unsigned char)3,            // ubyte
                    (short)70,                   // signed short
-                   (char*)"..."                 // char*
+                   (char*)"...",                // char*
+                   true                         // bool
         );
 		Log::close();
-		Assert::IsTrue(File::size(filename) == 35);
-		Assert::AreEqual(File::readText(filename).c_str(), "The num is 1314 + 2.03.14oo370...\r\n");
+		Assert::IsTrue(File::size(filename) == 39);
+		Assert::AreEqual(File::readText(filename).c_str(), "The num is 1314 + 2.03.14oo370...true\r\n");
 	}
 	TEST_METHOD(dbg) {
 		Log::dbg("hello");

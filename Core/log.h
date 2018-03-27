@@ -76,6 +76,9 @@ private:
 	///==============================================================================
 	/// Templates for implementing _write_
 	///==============================================================================
+    static std::string parseArg(bool value) {
+        return value ? "true" : "false";
+    }
     static std::string parseArg(const char* str) {
         /// Handle null case
     	return str ? str : std::string();
