@@ -67,7 +67,7 @@ public:
 
 			int count = (end - start);
 			if(count > 0) {
-				line += string(buffer, start, count);
+				line += std::string(buffer, start, count);
 			}
 		};
 

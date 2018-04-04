@@ -86,6 +86,9 @@ private:
     static std::string parseArg(const std::string& str) {
         return str;
     }
+    static std::string parseArg(const std::wstring& str) {
+        return WString::toString(str);
+    }
     static std::string parseArg(int value) {
     	return String::format("%d", value);
     }

@@ -37,3 +37,4 @@ static_assert(_WIN64 == 1, "Expecting to be in 64-bit mode");
 #include <chrono>
 #include <unordered_map>
 #include <algorithm>
+#include <functional>

@@ -28,3 +28,4 @@ namespace core {
 #include "thread.h"
 #include "map.h"
 #include "queue.h"
+#include "property_file.h"

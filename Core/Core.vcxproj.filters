@@ -71,6 +71,9 @@
     <ClInclude Include="fun.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="property_file.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="core64.asm">
