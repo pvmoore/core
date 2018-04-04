@@ -23,6 +23,16 @@ public:
         if(v==hash.end()) return defaultValue;
         return v->second;
     }
+    slong get(const std::string& key, slong defaultValue) {
+        auto v = hash.find(key);
+        if(v == hash.end()) return defaultValue;
+        return _atoi64(v->second.c_str());
+    }
+    double get(const std::string& key, double defaultValue) {
+        auto v = hash.find(key);
+        if(v == hash.end()) return defaultValue;
+        return atof(v->second.c_str());
+    }
     template<typename T, typename FUNCTOR>
     auto get(const std::string& key, T defaultValue, const FUNCTOR& parser) {
         auto v = hash.find(key);
