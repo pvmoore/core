@@ -22,6 +22,10 @@ public:
 		}
 		return false;
 	}
+    /// todo - test this
+    static bool mkDir(const std::wstring& path) {
+        return CreateDirectory(path.c_str(), nullptr);
+    }
 	/// Returns file size or -1 if it cannot be opened.
 	static slong size(const std::wstring& path) {
 		struct _stat64 s;
