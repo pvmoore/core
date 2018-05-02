@@ -1,2 +1,2 @@
 # Core
-Useful cpp utilities
+Core c++ Utility Library
