@@ -8,10 +8,14 @@ namespace core {
 
 class Log {
 	static FILE* fp;
+    static std::wstring filename;
 public:
 	~Log() {
 		close();
 	}
+    static void setFilename(const std::wstring& filename) {
+        Log::filename = filename;
+    }
 	static void close() {
 		if(fp) fclose(fp);
 		fp = nullptr;
@@ -67,7 +71,8 @@ public:
 private:
 	static void writeChars(const char* chars, ulong count) {
 		if(!fp) {
-			if(0 != _wfopen_s(&fp, L"log.log", L"w")) return;
+            if(filename.empty()) filename = L"log.log";
+			if(0 != _wfopen_s(&fp, filename.c_str(), L"w")) return;
 		}
 		fwrite(chars, 1, count, fp);
 		fwrite("\n", 1, 1, fp);

@@ -7,6 +7,7 @@
 namespace core {
 
 FILE* Log::fp = nullptr;
+std::wstring Log::filename;
 
 Log singletonLog;
 
