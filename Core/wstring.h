@@ -5,7 +5,7 @@
 
 namespace core {
 
-class WString {
+class WString final {
 public:
 	static std::wstring toWString(const std::string& str) {
 		if(str.empty()) return std::wstring();

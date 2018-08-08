@@ -6,7 +6,7 @@
 
 namespace core {
 
-class Log {
+class Log final {
 	static FILE* fp;
     static std::wstring filename;
 public:

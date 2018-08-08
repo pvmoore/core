@@ -43,5 +43,8 @@
     <ClCompile Include="test_fun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_property_file.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

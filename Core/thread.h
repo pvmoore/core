@@ -16,7 +16,7 @@ public:
 	~ThreadPool() {}
 };
 
-class Thread {
+class Thread final {
 public:
 	enum Status : uint { NOT_STARTED, RUNNING, FINISHED };
 	struct FuncWrapperArgs {

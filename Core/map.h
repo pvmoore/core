@@ -4,7 +4,7 @@
 
 namespace core {
 
-class Map {
+class Map final {
 public:
 	template<typename K, typename V>
 	bool contains(std::unordered_map<K, V>& map, V value) {

@@ -2,7 +2,7 @@
 
 namespace core {
 
-class FileWriter {
+class FileWriter final {
 	FILE* fp = nullptr;
 public:
 	std::wstring path;

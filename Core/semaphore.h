@@ -4,7 +4,7 @@
 
 namespace core {
 
-class Semaphore {
+class Semaphore final {
 	HANDLE handle;
 public:
 	Semaphore(int initialCount, int maxCount=INFINITE) : 

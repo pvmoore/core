@@ -6,7 +6,7 @@
 
 namespace core {
 
-class String {
+class String final {
 public:
 	inline static bool startsWith(const std::string& s, const std::string& needle) {
 		return !needle.empty() && s.size() >= needle.size() &&

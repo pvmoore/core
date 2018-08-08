@@ -11,7 +11,7 @@ inline void throwOnFileError(errno_t err, const std::wstring& filename) {
 	throw std::runtime_error(msg);
 }
 
-class File {
+class File final {
 public:
 	/// Returns true if the file exists.
 	static bool exists(const std::wstring& path) {

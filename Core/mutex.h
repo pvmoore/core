@@ -4,7 +4,7 @@
 
 namespace core {
 
-class Mutex {
+class Mutex final {
 	HANDLE handle;
 public:
 	Mutex() : handle(CreateMutex(nullptr, FALSE, nullptr)) {}

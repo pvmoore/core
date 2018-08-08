@@ -7,7 +7,7 @@
 namespace core {
 
 template<typename T, uint CAPACITY>
-class Queue {
+class Queue final {
 	T array[CAPACITY];
 	uint r = 0, w = 0, mask = CAPACITY - 1;
 	static_assert(__popcnt(CAPACITY) == 1);

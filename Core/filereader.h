@@ -6,7 +6,7 @@
 namespace core {
 
 template<int BUFFER_SIZE = 4096>
-class FileReader {
+class FileReader final {
 	FILE* fp = nullptr;
 	char buffer[BUFFER_SIZE];
 	int bufferPos = 0;

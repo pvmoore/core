@@ -2,7 +2,7 @@
 
 namespace core {
 
-class CharBuffer {
+class CharBuffer final {
 	char* buf      = nullptr;
 	uint strLength = 0;
 	uint bufLength = 0;
