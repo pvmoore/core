@@ -9,7 +9,7 @@ public:
 	ulong bytesWritten = 0;
 
 	FileWriter(const std::wstring& path, bool append=false) : path(path) {
-		auto mode = append ? L"a" : L"w";
+		auto mode = append ? L"ab" : L"wb";
 		throwOnFileError(_wfopen_s(&fp, path.c_str(), mode), path);
 	}
 	~FileWriter() {
