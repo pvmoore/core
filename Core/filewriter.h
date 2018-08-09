@@ -86,8 +86,9 @@ public:
 		return *this;
 	}
     auto& write(const void* data, ulong numBytes) const {
-        assert(numBytes > 0);
-        fwrite(data, 1, numBytes, fp);
+        if(numBytes > 0) {
+            fwrite(data, 1, numBytes, fp);
+        }
         return *this;
     }
 	void flush() {
