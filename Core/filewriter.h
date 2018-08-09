@@ -85,7 +85,7 @@ public:
 		va_end(ap);
 		return *this;
 	}
-    auto& write(void* data, uint numBytes) {
+    auto& write(const void* data, ulong numBytes) const {
         assert(numBytes > 0);
         fwrite(data, 1, numBytes, fp);
         return *this;
