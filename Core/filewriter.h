@@ -65,6 +65,7 @@ public:
 		return *this;
 	}
 	auto& writeFmt(const char* fmt, ...) {
+        assert(fmt);
 		/// Use this for small strings
 		char text[512];
 		va_list	ap;
@@ -87,6 +88,7 @@ public:
 	}
     auto& write(const void* data, ulong numBytes) const {
         if(numBytes > 0) {
+            assert(data);
             fwrite(data, 1, numBytes, fp);
         }
         return *this;
