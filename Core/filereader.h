@@ -60,27 +60,28 @@ public:
         read(&d, 8);
         return d;
 	}
-    void read(char* dest, ulong numBytes) {
+    void read(void* dest, ulong numBytes) {
         assert(dest);
         if(numBytes > 0) {
             if(currentPos == 0) {
                 fillBuffer();
             }
+            char* destPtr = (char*)dest;
             while(numBytes > 0 && !eof()) {
                 if(numBytes > BUFFER_SIZE - bufferPos) {
                     /// Partial copy
                     auto num = BUFFER_SIZE - bufferPos;
-                    memcpy(dest, buffer + bufferPos, num);
+                    memcpy(destPtr, buffer + bufferPos, num);
                     currentPos += num;
                     bufferPos += num;
                     numBytes -= num;
-                    dest += num;
+                    destPtr += num;
                     fillBuffer();
                 } else {
                     /// Copy remainder
-                    memcpy(dest, buffer+bufferPos, numBytes);
+                    memcpy(destPtr, buffer+bufferPos, numBytes);
                     currentPos += numBytes;
-                    bufferPos += numBytes;
+                    bufferPos += (int)numBytes;
                     numBytes = 0;
                 } 
             }
