@@ -12,7 +12,7 @@ class FileReader final {
 	int bufferPos = 0;
 	slong currentPos = 0;
 	slong filePos = 0;
-	static_assert(BUFFER_SIZE>=1024);
+	static_assert(BUFFER_SIZE>=16); // very small buffer but small buffer is useful for testing
 public:
 	const std::wstring path;
 	slong size = -1;
@@ -27,27 +27,65 @@ public:
 			fp = nullptr;
 		}
 	}
-	bool eof() const {
-		return currentPos >= size;
-	}
+	bool eof() const { return currentPos >= size; }
+    ulong pos() const { return currentPos; }
+
 	ubyte readByte() {
-		throw std::runtime_error("implement me");
+        ubyte v;
+        read(&v, 1);
+        return v;
 	}
 	short readShort() {
-		throw std::runtime_error("implement me");
+        short v;
+        read(&v, 2);
+        return v;
 	}
 	int readInt() {
-		throw std::runtime_error("implement me");
+        int v;
+        read(&v, 4);
+        return v;
 	}
 	slong readLong() {
-		throw std::runtime_error("implement me");
+        slong v;
+        read(&v, 8);
+        return v;
 	}
 	float readFloat() {
-		throw std::runtime_error("implement me");
+		float f;
+        read(&f, 4);
+        return f;
 	}
 	double readDouble() {
-		throw std::runtime_error("implement me");
+		double d;
+        read(&d, 8);
+        return d;
 	}
+    void read(char* dest, ulong numBytes) {
+        assert(dest);
+        if(numBytes > 0) {
+            if(currentPos == 0) {
+                fillBuffer();
+            }
+            while(numBytes > 0 && !eof()) {
+                if(numBytes > BUFFER_SIZE - bufferPos) {
+                    /// Partial copy
+                    auto num = BUFFER_SIZE - bufferPos;
+                    memcpy(dest, buffer + bufferPos, num);
+                    currentPos += num;
+                    bufferPos += num;
+                    numBytes -= num;
+                    dest += num;
+                    fillBuffer();
+                } else {
+                    /// Copy remainder
+                    memcpy(dest, buffer+bufferPos, numBytes);
+                    currentPos += numBytes;
+                    bufferPos += numBytes;
+                    numBytes = 0;
+                } 
+            }
+        }
+    }
 	/// Assumes /n (UNIX) or /r/n (Windows) line endings.
 	std::string readLine() {
 		if(eof()) return "";
@@ -102,6 +140,5 @@ private:
 		filePos += num;
 	}
 };
-
 
 } /// core
