@@ -14,8 +14,6 @@ int wmain(int argc, const wchar_t* argv[]) {
 #ifdef _DEBUG
 	printf("Testing...\n\n");
 
-
-
 #else
 	benchmark();
 #endif

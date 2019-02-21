@@ -84,6 +84,9 @@ private:
     static std::string parseArg(bool value) {
         return value ? "true" : "false";
     }
+    static std::string parseArg(char value) {
+        return String::format("%c", value);
+    }
     static std::string parseArg(const char* str) {
         /// Handle null case
     	return str ? str : std::string();
